@@ -83,33 +83,45 @@
 (defn clear!
   [canvas]
   (let [context (.getContext canvas "2d")]
+    (.scale context 1 1)
     (.clearRect context 0 0 (.-width canvas) (.-height canvas))))
 
-(defn render-ball!
-  [canvas x y y-size]
-  (let [context (.getContext canvas "2d")
-        play-board-height (.-height canvas)
-        ;; the ball height is the size of one square on the virtual grid we are considering the canvas to be
-        ball-height (.floor js/Math (/ play-board-height y-size))
-        ball-center-x (* (+ x 0.5) ball-height)
-        ball-center-y (* (+ y 0.5) ball-height)
-        ball-radius (/ ball-height 2)]
-    ;; (println ball-height ball-center-x ball-center-y ball-radius)
-    ;; (println play-board-height)
-    (.beginPath context)
-    ;; draw the circle
-    (.arc context
-          ball-center-x
-          ball-center-y
-          ball-radius 0
-          (* 2 (.-PI js/Math)) false)
-    (set! (.-fillStyle context) "orange")
-    (.fill context)
-    ;; fill it in
-    (set! (.-lineWidth context) 5)
-    (set! (.-strokeStyle context) "#003300")
-    (.stroke context)))
+;; (defn draw-x [size]
+;;   (let [img (BufferedImage. size size BufferedImage/TYPE_INT_ARGB)
+;;         plot-rows (generate-sierpinski size)
+;;         plots (for [x (range 0 size)
+;;                     y (range 0 x)]
+;;                 (if (= 1 (get (get plot-rows x) y)) [x y]))
+;;         gfx (.getGraphics img)]
+;;     (.setColor gfx Color/WHITE)
+;;     (.fillRect gfx 0 0 size size)
+;;     (.setColor gfx Color/BLACK)
+;;     (doseq [p (filter (comp not nil?) plots)]
+;;       (.drawLine gfx
+;;                  (get p 0)
+;;                  (get p 1)
+;;                  (get p 0)
+;;                  (get p 1)))
+;;     (ImageIO/write img "png" (File. "/result-asdf.png"))))
 
+
+(defn draw!
+  [canvas size]
+  (let [context (.getContext canvas "2d")
+        sierpinski-rows (generate-sierpinski size)
+        ;; each 1 in the sierpinski-rows is a "plot"
+        plots (for [x (range 0 size)
+                    y (range 0 (inc x))
+                    :when (= 1 (get (get sierpinski-rows x) y))]
+                [x y])]
+    ;; (println size)
+    ;; (println sierpinski-rows)
+    ;; (println plots)
+    ;; (println px)
+    (.scale context 10 10)
+    (doseq [p plots]
+      (.fillRect context (get p 0) (get p 1)
+                 1 1))))
 
 ;; canvas control and general DOM
 
@@ -122,10 +134,9 @@
     (reagent/create-class
      {:component-did-update
       (fn [this]
-        (let [canvas (.-firstChild @dom-node) ;; (.getElementById js/document "canvas-id")
-              dummy-x-y [5 5]]
-          (clear! canvas)
-          (render-ball! canvas (get dummy-x-y 0) (get dummy-x-y 1) 20)))
+        (let [canvas (.-firstChild @dom-node)]
+          ;; (clear! canvas)
+          (draw! canvas 60)))
 
       :component-did-mount
       (fn [this]
@@ -137,9 +148,8 @@
         [:div.canvas-container
          ;; reagent-render is called before the compoment mounts, so protect
          ;; against the null dom-node that occurs on the first render
-         [:canvas (if-let [node @dom-node] {:width (.-clientWidth node) :height (.-clientHeight node)})]
-         ]
-        )})))
+         [:canvas (if-let [node @dom-node]
+                    {:width (.-clientWidth node) :height (.-clientHeight node)})]])})))
 
 
 (defn main []
