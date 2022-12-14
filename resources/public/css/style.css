@@ -10,18 +10,27 @@ body {
   flex-direction: column;
   height: 100%;
 }
-div.canvas-outer-container {
-  flex: 1;
-  padding: 0 2em;
+p {
+  margin: 0.8em 0 0.8em;
+  font-family: monospace;
+  color: #aaa;
+  font-size: 0.84em;
+  letter-spacing: 0.02em;
+}
+div.pre-canvas {
+  float: right;
+  padding-right: 2.5%;
+  text-align: right;
 }
 div.canvas-container {
+  flex: 1;
   height: 100%;
-  width: 100%;
-  /* border: 1px solid magenta; */
+  width: 95%;
+  margin-left: auto;
+  margin-right: auto;
 }
 canvas {
-  background: #eee;
-  /* note that this stretches a little bit */
-  height: 100%;
-  width: 100%;
+  background: #f4f4f4;
+  max-height: 100%;
+  max-width: 100% !important;
 }

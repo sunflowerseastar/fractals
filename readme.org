@@ -21,6 +21,54 @@ lein fig:min
 
 This project was started from [[https://www.packtpub.com/product/clojure-data-structures-and-algorithms-cookbook/9781785281457][Clojure Data Structures and Algorithms Cookbook, by Rakif Naccache]].
 
+* diagrams
+
+#+begin_src
+[[1 0 0 0 0 0 0]
+ [1 1 0 0 0 0 0]
+ [1 1 1 0 0 0 0]
+ [1 1 1 1 0 0 0]
+ [1 1 1 1 1 0 0]
+ [1 1 1 1 1 1 0]
+ [1 1 1 1 1 1 1]]
+
+[[1]
+ [1 1]
+ [1 1 1]
+ [1 1 1 1]
+ [1 1 1 1 1]
+ [1 1 1 1 1 1]
+ [1 1 1 1 1 1 1]]
+
+[[1]
+ [1 1]
+ [1 2 1]
+ [1 3 3 1]
+ [1 4 6 4 1]
+ [1 5 10 10 5 1]
+ [1 6 15 20 15 6 1]]
+
+(generate-sierpinski 5) => ...
+[[1]
+ [1 1]
+ [1 0 1]
+ [1 1 1 1]
+ [1 0 0 0 1]
+ [. . . . . .]]
+
+Imagining each 1 as a black square, the above will be drawn as:
+
+1 1 1 1 1 ...
+  1 0 1 0 ...
+    1 1 0 ...
+      1 0 ...
+        1 ...
+          ...
+
+It's as if the x and y were flipped.
+#+end_src
+
+
 * reference
 
 https://github.com/reagent-project/reagent-cookbook/tree/master/recipes/canvas-fills-div
