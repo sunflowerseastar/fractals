@@ -4,22 +4,6 @@
    [reagent.core :as reagent :refer [atom]]
    [reagent.dom :as rdom]))
 
-(println "This text is printed from src/pascals_triangle_fractals/core.cljs. Go ahead and edit it and see reloading in action.")
-
-(defn multiply [a b] (* a b))
-
-;; define your app data so that it doesn't get over-written on reload
-(defonce app-state (atom {:text "Hello world!"}))
-
-(defn get-app-element []
-  (gdom/getElement "app"))
-
-(defn hello-world []
-  [:div
-   [:h1 (:text @app-state)]
-   [:h3 "Edit this in src/pascals_triangle_fractals/core.cljs and watch it change!"]])
-
-
 ;; [[1 0 0 0 0 0 0]
 ;;  [1 1 0 0 0 0 0]
 ;;  [1 1 1 0 0 0 0]
@@ -94,12 +78,88 @@
 (generate-pascal 10)
 
 
+;; canvas
+;;
+(defn clear!
+  [canvas]
+  (let [context (.getContext canvas "2d")]
+    (.clearRect context 0 0 (.-width canvas) (.-height canvas))))
+
+(defn render-ball!
+  [canvas x y y-size]
+  (let [context (.getContext canvas "2d")
+        play-board-height (.-height canvas)
+        ;; the ball height is the size of one square on the virtual grid we are considering the canvas to be
+        ball-height (.floor js/Math (/ play-board-height y-size))
+        ball-center-x (* (+ x 0.5) ball-height)
+        ball-center-y (* (+ y 0.5) ball-height)
+        ball-radius (/ ball-height 2)]
+    ;; (println ball-height ball-center-x ball-center-y ball-radius)
+    ;; (println play-board-height)
+    (.beginPath context)
+    ;; draw the circle
+    (.arc context
+          ball-center-x
+          ball-center-y
+          ball-radius 0
+          (* 2 (.-PI js/Math)) false)
+    (set! (.-fillStyle context) "orange")
+    (.fill context)
+    ;; fill it in
+    (set! (.-lineWidth context) 5)
+    (set! (.-strokeStyle context) "#003300")
+    (.stroke context)))
 
 
+;; canvas control and general DOM
 
+(def window-width (reagent/atom nil))
+
+(defn render-canvas!
+  "Initiate and control a canvas rendering."
+  []
+  (let [dom-node (reagent/atom nil)]
+    (reagent/create-class
+     {:component-did-update
+      (fn [this]
+        (let [canvas (.-firstChild @dom-node) ;; (.getElementById js/document "canvas-id")
+              dummy-x-y [5 5]]
+          (clear! canvas)
+          (render-ball! canvas (get dummy-x-y 0) (get dummy-x-y 1) 20)))
+
+      :component-did-mount
+      (fn [this]
+        (reset! dom-node (rdom/dom-node this)))
+
+      :reagent-render
+      (fn []
+        @window-width ;; Trigger re-render on window resizes
+        [:div.canvas-container
+         ;; reagent-render is called before the compoment mounts, so protect
+         ;; against the null dom-node that occurs on the first render
+         [:canvas (if-let [node @dom-node] {:width (.-clientWidth node) :height (.-clientHeight node)})]
+         ]
+        )})))
+
+
+(defn main []
+  [:<>
+   [:div.pre-canvas [:p "pre"]]
+   [:div.canvas-outer-container [render-canvas!]]
+   [:div.post-canvas [:p "post"]]])
+
+
+;; reagent setup + resizing
+
+(defn on-window-resize [evt]
+  (reset! window-width (.-innerWidth js/window)))
 
 (defn mount [el]
-  (rdom/render [hello-world] el))
+  (rdom/render [main] el)
+  (.addEventListener js/window "resize" on-window-resize))
+
+(defn get-app-element []
+  (gdom/getElement "app"))
 
 (defn mount-app-element []
   (when-let [el (get-app-element)]

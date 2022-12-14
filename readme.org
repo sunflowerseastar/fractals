@@ -1,0 +1,22 @@
+* quick start
+
+This project was created with:
+
+#+begin_src sh
+lein new figwheel-main pascals-triangle-fractals -- --reagent
+#+end_src
+
+From the auto-created readme:
+
+#+begin_src sh
+# run
+lein fig:build
+# check connection
+(js/alert "Am I connected?")
+
+# clean and prod build
+lein clean
+lein fig:min
+#+end_src
+
+This project was started from [[https://www.packtpub.com/product/clojure-data-structures-and-algorithms-cookbook/9781785281457][Clojure Data Structures and Algorithms Cookbook, by Rakif Naccache]].

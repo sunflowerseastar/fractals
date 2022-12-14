@@ -1,2 +1,27 @@
-/* some style */
-
+html,
+body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  overflow: hidden;
+}
+#app {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+div.canvas-outer-container {
+  flex: 1;
+  padding: 0 2em;
+}
+div.canvas-container {
+  height: 100%;
+  width: 100%;
+  /* border: 1px solid magenta; */
+}
+canvas {
+  background: #eee;
+  /* note that this stretches a little bit */
+  height: 100%;
+  width: 100%;
+}
