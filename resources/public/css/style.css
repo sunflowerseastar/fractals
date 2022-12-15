@@ -21,6 +21,8 @@ div.pre-canvas {
   float: right;
   padding-right: 2.5%;
   text-align: right;
+  /* 40 matches offset in traingle.cljs */
+  height: 40px;
 }
 div.canvas-container {
   flex: 1;

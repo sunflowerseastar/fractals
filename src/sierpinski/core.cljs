@@ -31,8 +31,7 @@
   [:<>
    [:div.pre-canvas
     [triangle-meta]]
-   [render-canvas!]
-   [:p]])
+   [render-canvas!]])
 
 
 ;; reagent setup + resizing
