@@ -3,38 +3,10 @@
    [goog.dom :as gdom]
    [reagent.core :as reagent :refer [atom]]
    [reagent.dom :as rdom]
-   [triangle.sierpinski :refer [draw! triangle-meta]]))
-
-(def window-width (atom nil))
-
-(defn render-canvas!
-  []
-  (let [dom-node (reagent/atom nil)]
-    (reagent/create-class
-     {:component-did-update
-      (fn []
-        (let [canvas (.-firstChild @dom-node)]
-          (draw! canvas)))
-
-      :component-did-mount
-      (fn [this]
-        (reset! dom-node (rdom/dom-node this)))
-
-      :reagent-render
-      (fn []
-        @window-width ;; trigger re-render
-        [:div.canvas-container
-         [:canvas (if-let [node @dom-node]
-                    {:width (.-clientWidth node) :height (.-clientHeight node)})]])})))
+   [sierpinski.triangle :refer [sierpinski-triangle window-width]]))
 
 (defn main []
-  [:<>
-   [:div.pre-canvas
-    [triangle-meta]]
-   [render-canvas!]])
-
-
-;; reagent setup + resizing
+  [sierpinski-triangle])
 
 (defn on-window-resize [evt]
   (reset! window-width (.-innerWidth js/window)))

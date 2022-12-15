@@ -1,18 +1,21 @@
-(ns triangle.sierpinski)
+(ns sierpinski.triangle
+  (:require
+   [reagent.core :as reagent :refer [atom]]
+   [reagent.dom :as rdom]))
 
 ;; utility
-(def scale 1.6)
-(defn inner-width->num-rows [inner-width]
-  (js/parseInt (/ (* .95 inner-width) scale)))
+(def scale (atom 1.4))
+(defn inner-width->num-rows [inner-width] (js/parseInt (/ (* .95 inner-width) @scale)))
 
-(def vw-95-percent-pixel-count (inner-width->num-rows (.-innerWidth js/window)))
-;; 40 matches .pre-canvas height in style.css
-(def canvas-height (inner-width->num-rows (- (.-innerHeight js/window) 40)))
+;; these are written as a function so call sites can get the latest DOM reading
+(def canvas-width-fn (fn [] (inner-width->num-rows (.-innerWidth js/window))))
+;; magic number '40' matches .pre-canvas height in style.css
+(def canvas-height-fn (fn [] (inner-width->num-rows (- (.-innerHeight js/window) 40))))
 
 ;; state
-(def num-rows (atom vw-95-percent-pixel-count))
-;; (def num-rows (atom 50))
+(def num-rows (atom (canvas-width-fn)))
 (def num-cells (atom nil))
+(def active-triangle-plot-type (atom 0))
 
 ;; triangle generation
 (defn row->next-row
@@ -60,18 +63,19 @@
 (defn plot-straight-along-the-bottom
   "The original plot, from Rafik Naccache's Clojure Data Structures and Algorithms Cookbook."
   [size sierpinski-triangle-rows]
-  (loop [curr-y 0
-         curr-starting-x (dec (/ size 2))
-         acc []]
-    (if (>= curr-y canvas-height)
-      acc
-      (let [new-plot-row
-            (->> (get sierpinski-triangle-rows curr-y)
-                 (map-indexed (fn [i x] (when (> x 0) [(+ (* i 2) curr-starting-x) (* curr-y 2)])))
-                 (filter identity))]
-        (recur (inc curr-y)
-               (dec curr-starting-x)
-               (concat acc new-plot-row))))))
+  (let [height (canvas-height-fn)]
+    (loop [curr-y 0
+           curr-starting-x (dec (/ size 2))
+           acc []]
+      (if (>= curr-y height)
+        acc
+        (let [new-plot-row
+              (->> (get sierpinski-triangle-rows curr-y)
+                   (map-indexed (fn [i x] (when (> x 0) [(+ (* i 2) curr-starting-x) (* curr-y 2)])))
+                   (filter identity))]
+          (recur (inc curr-y)
+                 (dec curr-starting-x)
+                 (concat acc new-plot-row)))))))
 
 (defn plot-straight-along-the-top
   "The original plot, from Rafik Naccache's Clojure Data Structures and Algorithms Cookbook."
@@ -81,33 +85,82 @@
         :when (= 1 (get (get sierpinski-triangle-rows x) y))]
     [x y]))
 
+(def triangle-plot-types
+  [{:name "vertical"
+    :plot-fn plot-straight-along-the-bottom
+    :plot-rectangle-size 2
+    ;; this plot needs to know how tall it will be
+    :size canvas-height-fn
+    :scale 1.4}
+   {:name "horizontal"
+    :plot-fn plot-straight-along-the-top
+    :plot-rectangle-size 1
+    ;; this plot needs to know how wide it will be
+    :size canvas-width-fn
+    :scale 2.0}])
+
 ;; canvas
 (defn draw!
   [canvas]
   (println "draw!")
   (let [
-        size (inner-width->num-rows (.-innerWidth js/window))
-        ;; size vw-95-percent-pixel-count
-        ;; size @num-rows
         context (.getContext canvas "2d")
-        sierpinski-triangle-rows (generate-sierpinski-triangle canvas-height)
+        triangle-plot-type (get triangle-plot-types @active-triangle-plot-type)
+        size ((:size triangle-plot-type))
+        sierpinski-triangle-rows (generate-sierpinski-triangle size)
         new-num-cells (reduce + (range 1 (inc size)))
         ;; each 1 in the sierpinski-triangle-rows becomes a "plot"
-        ;; plots (plot-straight-along-the-top size sierpinski-triangle-rows)
-        plots (plot-straight-along-the-bottom size sierpinski-triangle-rows)
-        ]
-    (println (count plots))
-
+        plots ((:plot-fn triangle-plot-type) (canvas-width-fn) sierpinski-triangle-rows)]
     ;; update meta
     (reset! num-rows (inner-width->num-rows (.-innerWidth js/window)))
     (reset! num-cells new-num-cells)
     ;; adjust scale
-    (.scale context scale scale)
+    (.scale context (:scale triangle-plot-type) (:scale triangle-plot-type))
     ;; plot triangle points
     (doseq [p plots]
-      (.fillRect context (get p 0) (get p 1) 2 2)
-      )))
+      (.fillRect context (get p 0) (get p 1)
+                 (:plot-rectangle-size triangle-plot-type)
+                 (:plot-rectangle-size triangle-plot-type)))))
 
-;; upper-right-hand corner "meta" information
-(defn triangle-meta []
-  [:p [:span "num-rows: " @num-rows " | cells: " @num-cells]])
+(def window-width (atom nil))
+
+(defn render-canvas!
+  []
+  (let [dom-node (reagent/atom nil)]
+    (reagent/create-class
+     {:component-did-update
+      (fn []
+        (let [canvas (.-firstChild @dom-node)]
+          (draw! canvas)))
+
+      :component-did-mount
+      (fn [this]
+        (reset! dom-node (rdom/dom-node this)))
+
+      :reagent-render
+      (fn []
+        @window-width ;; trigger re-render
+        @active-triangle-plot-type
+        [:div.canvas-container
+         [:canvas (if-let [node @dom-node]
+                    {:width (.-clientWidth node) :height (.-clientHeight node)})]])})))
+
+(defn triangle-meta [rows cells]
+  [:p [:span "num-rows: " rows " | cells: " cells]])
+
+(defn sierpinski-triangle []
+  [:<>
+   [:div.pre-canvas
+    (into [:div.chooser]
+          (map-indexed
+           (fn [i type]
+             (let [is-active (= @active-triangle-plot-type i)]
+               [:a {:on-click #(when-not is-active
+                                 (reset! active-triangle-plot-type i)
+                                 (reset! scale (get-in @triangle-plot-types [i :scale]))
+                                 (println "hi"))
+                    :class (when is-active "is-active")}
+                (:name type)]))
+           triangle-plot-types))
+    [:div.meta [:span "num-rows: " @num-rows " | cells: " @num-cells]]]
+   [render-canvas!]])

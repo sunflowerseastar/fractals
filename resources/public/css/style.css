@@ -1,9 +1,27 @@
+:root {
+  --light-gray: #aaa;
+  --gray: #666;
+  --dark-gray: #444;
+
+  --space-xs: 0.36em;
+  --space-sm: 0.6em;
+  /* 40 matches offset in traingle.cljs */
+  --space-40: 40px;
+
+  --transition-fast: 90ms;
+}
 html,
 body {
   margin: 0;
   padding: 0;
   height: 100%;
   overflow: hidden;
+}
+body {
+  font-family: monospace;
+  color: var(--light-gray);
+  font-size: 0.84em;
+  letter-spacing: 0.02em;
 }
 #app {
   display: flex;
@@ -12,17 +30,37 @@ body {
 }
 p {
   margin: 0.8em 0 0.8em;
-  font-family: monospace;
-  color: #aaa;
-  font-size: 0.84em;
-  letter-spacing: 0.02em;
 }
 div.pre-canvas {
-  float: right;
+  padding-left: 2.5%;
   padding-right: 2.5%;
-  text-align: right;
-  /* 40 matches offset in traingle.cljs */
-  height: 40px;
+  height: var(--space-40);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+div.chooser {
+  margin-left: calc(-1 * var(--space-sm));
+}
+div.chooser a {
+  color: var(--light-gray);
+  display: inline-block;
+  padding: var(--space-xs) var(--space-sm);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+div.chooser a:hover {
+  color: var(--gray);
+}
+div.chooser a.is-active {
+  color: var(--dark-gray);
+}
+div.chooser a.is-active:hover {
+  color: var(--dark-gray);
+  cursor: default;
+}
+div.meta {
+  cursor: default;
 }
 div.canvas-container {
   flex: 1;
