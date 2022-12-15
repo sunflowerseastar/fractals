@@ -3,10 +3,8 @@
 This project was created with:
 
 #+begin_src sh
-lein new figwheel-main pascals-triangle-fractals -- --reagent
+lein new figwheel-main sierpinski -- --reagent
 #+end_src
-
-From the auto-created readme:
 
 #+begin_src sh
 # run
@@ -19,7 +17,7 @@ lein clean
 lein fig:min
 #+end_src
 
-This project was started from [[https://www.packtpub.com/product/clojure-data-structures-and-algorithms-cookbook/9781785281457][Clojure Data Structures and Algorithms Cookbook, by Rakif Naccache]].
+This project was started from [[https://www.packtpub.com/product/clojure-data-structures-and-algorithms-cookbook/9781785281457][Clojure Data Structures and Algorithms Cookbook, by Rakif Naccache]], section /Using Pascal's triangle to draw fractals/.
 
 * diagrams
 

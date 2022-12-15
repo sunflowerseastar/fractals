@@ -1,7 +1,7 @@
-(ns pascals-triangle-fractals.core-test
+(ns sierpinski.core-test
     (:require
      [cljs.test :refer-macros [deftest is testing]]
-     ;; [pascals-triangle-fractals.core :refer [multiply]]
+     ;; [sierpinski.core :refer [multiply]]
      ))
 
 ;; (deftest multiply-test
