@@ -1,11 +1,5 @@
 * quick start
 
-This project was created with:
-
-#+begin_src sh
-lein new figwheel-main sierpinski -- --reagent
-#+end_src
-
 #+begin_src sh
 # run
 lein fig:build
@@ -17,27 +11,12 @@ lein clean
 lein fig:min
 #+end_src
 
-This project was started from [[https://www.packtpub.com/product/clojure-data-structures-and-algorithms-cookbook/9781785281457][Clojure Data Structures and Algorithms Cookbook, by Rakif Naccache]], section /Using Pascal's triangle to draw fractals/.
+This project was started from [[https://www.packtpub.com/product/clojure-data-structures-and-algorithms-cookbook/9781785281457][Clojure Data Structures and Algorithms Cookbook, by Rakif Naccache]].
 
 * diagrams
 
 #+begin_src
-[[1 0 0 0 0 0 0]
- [1 1 0 0 0 0 0]
- [1 1 1 0 0 0 0]
- [1 1 1 1 0 0 0]
- [1 1 1 1 1 0 0]
- [1 1 1 1 1 1 0]
- [1 1 1 1 1 1 1]]
-
-[[1]
- [1 1]
- [1 1 1]
- [1 1 1 1]
- [1 1 1 1 1]
- [1 1 1 1 1 1]
- [1 1 1 1 1 1 1]]
-
+(generate-pascal-triangle 5) => ...
 [[1]
  [1 1]
  [1 2 1]
@@ -46,51 +25,35 @@ This project was started from [[https://www.packtpub.com/product/clojure-data-st
  [1 5 10 10 5 1]
  [1 6 15 20 15 6 1]]
 
-(generate-sierpinski 5) => ...
+(generate-sierpinski-triangle 5) => ...
 [[1]
  [1 1]
  [1 0 1]
  [1 1 1 1]
- [1 0 0 0 1]
- [. . . . . .]]
-
-Imagining each 1 as a black square, the above will be drawn as:
-
-1 1 1 1 1 ...
-  1 0 1 0 ...
-    1 1 0 ...
-      1 0 ...
-        1 ...
-          ...
-
-It's as if the x and y were flipped.
+ [1 0 0 0 1]]
 #+end_src
 
-I want
+** Vertical, aka plot-straight-along-the-bottom
 
+"Vertical" plot type, with the triangle starting at the middle top, and widening downward until the bottom straight edge of the triangle is at the bottom of the canvas:
+
+#+begin_src
 [[1]
  [1 1]
  [1 0 1]
  [1 1 1 1]
  [1 0 0 0 1]]
 
- to look like:
-
     1       [4,0]
    1 1      [3,1] [5,1]
   1 0 1     [2,2] [6,2]
  1 1 1 1    [1,3] [3,3] [5,3] [7,3]
 1 0 0 0 1   [0,4] [8,4]
-
-#+begin_src clojure
-loop curr-y 0 ;; (get str curr-y) => [1]
-     curr-starting-x (dec size) ;; => 4
-     map (get str curr-y) ;; [1] => [ [ ] ]
-
 #+end_src
 
+Note that this way means that each plot point will need to be a 2x2 rectangle:
 
-
+#+begin_src
     11       [4,0]
     11
    1111      [3,2], [5,2]
@@ -101,6 +64,29 @@ loop curr-y 0 ;; (get str curr-y) => [1]
  11111111
 11      11   [0,8], [8,8]
 11      11
+#+end_src
+
+** Horizontal, aka plot-straight-along-the-top
+
+"Horizontal" plot type, with one of the straight triangle edges against the top of the canvas:
+
+#+begin_src
+[[1]
+ [1 1]
+ [1 0 1]
+ [1 1 1 1]
+ [1 0 0 0 1]
+ [a b c d e f]]
+
+1 1 1 1 1 a
+  1 0 1 0 b
+    1 1 0 c
+      1 0 d
+        1 e
+          f
+#+end_src
+
+This is from [[https://www.packtpub.com/product/clojure-data-structures-and-algorithms-cookbook/9781785281457][Clojure Data Structures and Algorithms Cookbook, by Rakif Naccache]], section /Using Pascal's triangle to draw fractals/.
 
 * reference
 
