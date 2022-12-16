@@ -39,29 +39,32 @@ div.pre-canvas {
   justify-content: space-between;
   align-items: center;
 }
-div.chooser {
+
+div.switcher {
   margin-left: calc(-1 * var(--space-sm));
 }
-div.chooser a {
+div.switcher a {
   color: var(--light-gray);
   display: inline-block;
   padding: var(--space-xs) var(--space-sm);
   cursor: pointer;
   transition: all var(--transition-fast);
 }
-div.chooser a:hover {
+div.switcher a:hover {
   color: var(--gray);
 }
-div.chooser a.is-active {
+div.switcher a.is-active {
   color: var(--dark-gray);
 }
-div.chooser a.is-active:hover {
+div.switcher a.is-active:hover {
   color: var(--dark-gray);
   cursor: default;
 }
+
 div.meta {
   cursor: default;
 }
+
 div.canvas-container {
   flex: 1;
   height: 100%;
@@ -73,4 +76,14 @@ canvas {
   background: #f4f4f4;
   max-height: 100%;
   max-width: 100% !important;
+}
+
+div.bottom-switcher-container {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: var(--space-xs) 2.5%;
+  text-align: center;
+  background: white;
 }

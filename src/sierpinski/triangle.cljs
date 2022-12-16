@@ -1,7 +1,9 @@
 (ns sierpinski.triangle
   (:require
    [reagent.core :as reagent :refer [atom]]
-   [reagent.dom :as rdom]))
+   [reagent.dom :as rdom]
+   [sierpinski.components :refer [switcher-a]]
+   ))
 
 ;; utility
 (def scale (atom 1.4))
@@ -103,8 +105,7 @@
 (defn draw!
   [canvas]
   (println "draw!")
-  (let [
-        context (.getContext canvas "2d")
+  (let [context (.getContext canvas "2d")
         triangle-plot-type (get triangle-plot-types @active-triangle-plot-type)
         size ((:size triangle-plot-type))
         sierpinski-triangle-rows (generate-sierpinski-triangle size)
@@ -145,21 +146,18 @@
          [:canvas (if-let [node @dom-node]
                     {:width (.-clientWidth node) :height (.-clientHeight node)})]])})))
 
-(defn triangle-meta [rows cells]
-  [:p [:span "num-rows: " rows " | cells: " cells]])
-
 (defn sierpinski-triangle []
   [:<>
    [:div.pre-canvas
-    (into [:div.chooser]
+    (into [:div.switcher]
           (map-indexed
            (fn [i type]
              (let [is-active (= @active-triangle-plot-type i)]
-               [:a {:on-click #(when-not is-active
-                                 (reset! active-triangle-plot-type i)
-                                 (reset! scale (get-in @triangle-plot-types [i :scale]))
-                                 (println "hi"))
-                    :class (when is-active "is-active")}
+               [switcher-a
+                is-active
+                #(when-not is-active
+                   (reset! active-triangle-plot-type i)
+                   (reset! scale (get-in triangle-plot-types [i :scale])))
                 (:name type)]))
            triangle-plot-types))
     [:div.meta [:span "num-rows: " @num-rows " | cells: " @num-cells]]]
