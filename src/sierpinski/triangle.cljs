@@ -104,7 +104,6 @@
 ;; canvas
 (defn draw!
   [canvas]
-  (println "draw!")
   (let [context (.getContext canvas "2d")
         triangle-plot-type (get triangle-plot-types @active-triangle-plot-type)
         size ((:size triangle-plot-type))
@@ -112,7 +111,7 @@
         new-num-cells (reduce + (range 1 (inc size)))
         ;; each 1 in the sierpinski-triangle-rows becomes a "plot"
         plots ((:plot-fn triangle-plot-type) (canvas-width-fn) sierpinski-triangle-rows)]
-    ;; update meta
+    ;; update controls-post-canvas-left
     (reset! num-rows (inner-width->num-rows (.-innerWidth js/window)))
     (reset! num-cells new-num-cells)
     ;; adjust scale
@@ -123,10 +122,8 @@
                  (:plot-rectangle-size triangle-plot-type)
                  (:plot-rectangle-size triangle-plot-type)))))
 
-(def window-width (atom nil))
-
 (defn render-canvas!
-  []
+  [window-width]
   (let [dom-node (reagent/atom nil)]
     (reagent/create-class
      {:component-did-update
@@ -146,9 +143,9 @@
          [:canvas (if-let [node @dom-node]
                     {:width (.-clientWidth node) :height (.-clientHeight node)})]])})))
 
-(defn sierpinski-triangle []
+(defn sierpinski-triangle [window-width]
   [:<>
-   [:div.pre-canvas
+   [:div.controls-post-canvas-left
     (into [:div.switcher]
           (map-indexed
            (fn [i type]
@@ -159,6 +156,6 @@
                    (reset! active-triangle-plot-type i)
                    (reset! scale (get-in triangle-plot-types [i :scale])))
                 (:name type)]))
-           triangle-plot-types))
-    [:div.meta [:span "num-rows: " @num-rows " | cells: " @num-cells]]]
-   [render-canvas!]])
+           triangle-plot-types))]
+   [:div.controls-post-canvas-right [:span "num-rows: " @num-rows " | cells: " @num-cells]]
+   [render-canvas! window-width]])

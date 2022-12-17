@@ -4,12 +4,15 @@
    [reagent.dom :as rdom]))
 
 (def max-iterations 4)
+(def mi (atom 2))
+(def num-squares (atom 0))
 
 (defn draw-the-center-square
   [context x y size]
   (let [inner-square-size (/ size 3)]
     (.fillRect context (+ x inner-square-size) (+ y inner-square-size)
-               inner-square-size inner-square-size)))
+               inner-square-size inner-square-size)
+    (swap! num-squares inc)))
 
 (defn recursively-draw-the-other-eight-squares
   [iteration-count context x y inner-square-size]
@@ -17,13 +20,12 @@
     (let [inner-square-x (+ x (* inner-square-size m))
           inner-square-y (+ y (* inner-square-size n))]
       (draw-the-center-square context inner-square-x inner-square-y inner-square-size)
-      (when (< iteration-count max-iterations)
+      (when (< iteration-count @mi)
         (recursively-draw-the-other-eight-squares (inc iteration-count) context inner-square-x inner-square-y (/ inner-square-size 3))))))
 
 ;; canvas
 (defn draw!
   [canvas]
-  (println "draw carpet!")
   (let [context (.getContext canvas "2d")
         ;; calculate the max-area centered square of the canvas
         canvas-width (-> context .-canvas .-clientWidth)
@@ -44,12 +46,14 @@
     ;; X X X
     ;; X . X
     ;; X X X
-    (recursively-draw-the-other-eight-squares 0 context x-offset y-offset inner-square-size)))
+    (when (> @mi 0)
+      (recursively-draw-the-other-eight-squares 1 context x-offset y-offset inner-square-size)
+      )))
 
 (def window-width (atom nil))
 
 (defn render-canvas!
-  []
+  [window-width]
   (let [dom-node (reagent/atom nil)]
     (reagent/create-class
      {:component-did-update
@@ -64,12 +68,20 @@
       :reagent-render
       (fn []
         @window-width ;; trigger re-render
+        @mi
         [:div.canvas-container
          [:canvas (if-let [node @dom-node]
                     {:width (.-clientWidth node) :height (.-clientHeight node)})]])})))
 
-(defn sierpinski-carpet []
+(defn sierpinski-carpet [window-width]
   [:<>
-   [:div.pre-canvas
-    [:div.meta [:span "meta"]]]
-   [render-canvas!]])
+   [:div.controls-post-canvas-left
+    [:div.inc-dec
+     [:span "iterations:"]
+     [:a.box-button {:class (when (< @mi 1) "inactive")
+                     :on-click #(when (pos? @mi) (swap! mi dec))} "-"]
+     [:span @mi]
+     [:a.box-button {:class (when (> @mi 4) "inactive")
+                     :on-click #(when (<= @mi 4) (swap! mi inc))} "+"]]]
+   [:div.controls-post-canvas-right [:span "squares drawn: " @num-squares]]
+   [render-canvas! window-width]])

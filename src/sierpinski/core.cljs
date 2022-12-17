@@ -5,7 +5,7 @@
    [reagent.dom :as rdom]
    [sierpinski.components :refer [switcher-a]]
    [sierpinski.carpet :refer [sierpinski-carpet]]
-   [sierpinski.triangle :refer [sierpinski-triangle window-width]]))
+   [sierpinski.triangle :refer [sierpinski-triangle]]))
 
 (def sierpinski-options
   [{:name "triangle"
@@ -14,21 +14,25 @@
     :component sierpinski-carpet}])
 (def current-sierpinski-option (atom 1))
 
+(def window-width (atom nil))
+
 (defn main []
   (let
       [current-sierpinski-component
        (:component (get sierpinski-options @current-sierpinski-option))]
     [:<>
-     [current-sierpinski-component]
-     (into [:div.switcher.bottom-switcher-container]
-           (map-indexed
-            (fn [i option]
-              (let [is-active (= @current-sierpinski-option i)]
-                [switcher-a
-                 is-active
-                 #(when-not is-active (reset! current-sierpinski-option i))
-                 (:name option)]))
-            sierpinski-options))]))
+     [:div.pre-canvas
+      (into [:div.switcher]
+            (map-indexed
+             (fn [i option]
+               (let [is-active (= @current-sierpinski-option i)]
+                 [switcher-a
+                  is-active
+                  #(when-not is-active (reset! current-sierpinski-option i))
+                  (:name option)]))
+             sierpinski-options))]
+     [current-sierpinski-component window-width]
+     [:div.post-canvas]]))
 
 (defn on-window-resize [evt]
   (reset! window-width (.-innerWidth js/window)))

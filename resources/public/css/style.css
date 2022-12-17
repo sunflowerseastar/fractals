@@ -1,11 +1,13 @@
 :root {
-  --extra-light-gray: #f4f4f4;
-  --light-gray: #aaa;
-  --gray: #666;
-  --dark-gray: #444;
+  --gray-f4: #f4f4f4;
+  --gray-ddd: #ddd;
+  --gray-aaa: #aaa;
+  --gray-666: #666;
+  --gray-444: #444;
 
   --space-xs: 0.36em;
   --space-sm: 0.6em;
+  --space-md: 1.28em;
   /* 40 matches offset in traingle.cljs */
   --space-40: 40px;
 
@@ -18,9 +20,13 @@ body {
   height: 100%;
   overflow: hidden;
 }
+::selection {
+  background: none;
+  color: inherit;
+}
 body {
   font-family: monospace;
-  color: var(--light-gray);
+  color: var(--gray-aaa);
   font-size: 0.84em;
   letter-spacing: 0.02em;
 }
@@ -32,37 +38,80 @@ body {
 p {
   margin: 0.8em 0 0.8em;
 }
+a {
+  display: inline-block;
+  padding: var(--space-xs) var(--space-sm);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+a:hover {
+  color: var(--gray-666);
+}
+a.box-button {
+  border: 1px solid var(--gray-ddd);
+  margin-left: var(--space-sm);
+  margin-right: var(--space-sm);
+}
+a.box-button:hover {
+  border: 1px solid var(--gray-aaa);
+}
+a.inactive {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+a.box-button.inactive:hover {
+  color: inherit;
+  border: 1px solid var(--gray-ddd);
+}
+
 div.pre-canvas {
   padding-left: 2.5%;
   padding-right: 2.5%;
   height: var(--space-40);
+  flex-shrink: 0;
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+div.post-canvas {
+  height: var(--space-40);
+  flex-shrink: 0;
 }
 
 div.switcher {
   margin-left: calc(-1 * var(--space-sm));
 }
 div.switcher a {
-  color: var(--light-gray);
-  display: inline-block;
-  padding: var(--space-xs) var(--space-sm);
-  cursor: pointer;
-  transition: all var(--transition-fast);
+  /* color: var(--gray-aaa); */
 }
 div.switcher a:hover {
-  color: var(--gray);
+  /* color: var(--gray-666); */
 }
 div.switcher a.is-active {
-  color: var(--dark-gray);
+  color: var(--gray-444);
 }
 div.switcher a.is-active:hover {
-  color: var(--dark-gray);
+  color: var(--gray-444);
   cursor: default;
 }
+div.controls-post-canvas-left {
+  position: absolute;
+  bottom: 0;
+  left: 2.5%;
+  height: var(--space-40);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
 
-div.meta {
+div.controls-post-canvas-right {
+  position: absolute;
+  bottom: 0;
+  right: 2.5%;
+  height: var(--space-40);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
   cursor: default;
 }
 
@@ -74,17 +123,7 @@ div.canvas-container {
   margin-right: auto;
 }
 canvas {
-  background: var(--extra-light-gray);
+  background: var(--gray-f4);
   max-height: 100%;
   max-width: 100% !important;
-}
-
-div.bottom-switcher-container {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  padding: var(--space-xs) 2.5%;
-  text-align: center;
-  background: white;
 }
