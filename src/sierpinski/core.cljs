@@ -4,11 +4,14 @@
    [reagent.core :as reagent :refer [atom]]
    [reagent.dom :as rdom]
    [sierpinski.components :refer [switcher-a]]
+   [sierpinski.curve :refer [sierpinski-curve]]
    [sierpinski.carpet :refer [sierpinski-carpet]]
    [sierpinski.triangle :refer [sierpinski-triangle]]))
 
 (def sierpinski-options
-  [{:name "carpet"
+  [{:name "curve"
+    :component sierpinski-curve}
+   {:name "carpet"
     :component sierpinski-carpet}
    {:name "triangle"
     :component sierpinski-triangle}])
