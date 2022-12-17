@@ -6,17 +6,12 @@
    ))
 
 ;; utility
-(def scale (atom 1.4))
-(defn inner-width->num-rows [inner-width] (js/parseInt (/ (* .95 inner-width) @scale)))
-
-;; these are written as a function so call sites can get the latest DOM reading
-(def canvas-width-fn (fn [] (inner-width->num-rows (.-innerWidth js/window))))
-;; magic number '40' matches .pre-canvas height in style.css
-(def canvas-height-fn (fn [] (inner-width->num-rows (- (.-innerHeight js/window) 40))))
+(def scale 1)
+(defn inner-width->num-rows [inner-width] (js/parseInt (/ (* .95 inner-width) scale)))
 
 ;; state
-(def num-rows (atom (canvas-width-fn)))
-(def num-cells (atom nil))
+(def num-rows (atom nil))
+(def num-squares (atom nil))
 (def active-triangle-plot-type (atom 0))
 
 ;; triangle generation
@@ -63,26 +58,26 @@
 ;; (generate-sierpinski-triangle 10)
 
 (defn plot-straight-along-the-bottom
-  "The original plot, from Rafik Naccache's Clojure Data Structures and Algorithms Cookbook."
-  [size sierpinski-triangle-rows]
-  (let [height (canvas-height-fn)]
-    (loop [curr-y 0
-           curr-starting-x (dec (/ size 2))
-           acc []]
-      (if (>= curr-y height)
-        acc
-        (let [new-plot-row
-              (->> (get sierpinski-triangle-rows curr-y)
-                   (map-indexed (fn [i x] (when (> x 0) [(+ (* i 2) curr-starting-x) (* curr-y 2)])))
-                   (filter identity))]
-          (recur (inc curr-y)
-                 (dec curr-starting-x)
-                 (concat acc new-plot-row)))))))
+  "Make an 'upright' triangle, with the point at the center top and the straight
+  edge along the bottom."
+  [width height sierpinski-triangle-rows]
+  (loop [curr-y 0
+         curr-starting-x (dec (/ width 2))
+         acc []]
+    (if (>= curr-y height)
+      acc
+      (let [new-plot-row
+            (->> (get sierpinski-triangle-rows curr-y)
+                 (map-indexed (fn [i x] (when (> x 0) [(+ (* i 2) curr-starting-x) (* curr-y 2)])))
+                 (filter identity))]
+        (recur (inc curr-y)
+               (dec curr-starting-x)
+               (concat acc new-plot-row))))))
 
 (defn plot-straight-along-the-top
   "The original plot, from Rafik Naccache's Clojure Data Structures and Algorithms Cookbook."
-  [size sierpinski-triangle-rows]
-  (for [x (range 0 size)
+  [width _ sierpinski-triangle-rows]
+  (for [x (range 0 width)
         y (range 0 (inc x))
         :when (= 1 (get (get sierpinski-triangle-rows x) y))]
     [x y]))
@@ -92,35 +87,38 @@
     :plot-fn plot-straight-along-the-bottom
     :plot-rectangle-size 2
     ;; this plot needs to know how tall it will be
-    :size canvas-height-fn
-    :scale 1.4}
+    :row-generation-direction :vertical}
    {:name "horizontal"
     :plot-fn plot-straight-along-the-top
     :plot-rectangle-size 1
     ;; this plot needs to know how wide it will be
-    :size canvas-width-fn
-    :scale 2.0}])
+    :row-generation-direction :horizontal}])
 
 ;; canvas
 (defn draw!
   [canvas]
   (let [context (.getContext canvas "2d")
         triangle-plot-type (get triangle-plot-types @active-triangle-plot-type)
-        size ((:size triangle-plot-type))
+        canvas-width (-> context .-canvas .-clientWidth)
+        canvas-height (-> context .-canvas .-clientHeight)
+        size (if (= (:row-generation-direction triangle-plot-type) :horizontal) canvas-width canvas-height)
         sierpinski-triangle-rows (generate-sierpinski-triangle size)
-        new-num-cells (reduce + (range 1 (inc size)))
         ;; each 1 in the sierpinski-triangle-rows becomes a "plot"
-        plots ((:plot-fn triangle-plot-type) (canvas-width-fn) sierpinski-triangle-rows)]
+        plots ((:plot-fn triangle-plot-type) canvas-width canvas-height sierpinski-triangle-rows)]
+
     ;; update controls-post-canvas-left
-    (reset! num-rows (inner-width->num-rows (.-innerWidth js/window)))
-    (reset! num-cells new-num-cells)
+    (reset! num-rows (count sierpinski-triangle-rows))
+    ;; (reset! num-squares (count plots))
     ;; adjust scale
-    (.scale context (:scale triangle-plot-type) (:scale triangle-plot-type))
+    ;; (println "scale: " @scale)
+    ;; (.scale context (:scale triangle-plot-type) (:scale triangle-plot-type))
+    (.scale context scale scale)
     ;; plot triangle points
     (doseq [p plots]
       (.fillRect context (get p 0) (get p 1)
                  (:plot-rectangle-size triangle-plot-type)
-                 (:plot-rectangle-size triangle-plot-type)))))
+                 (:plot-rectangle-size triangle-plot-type))
+      (swap! num-squares inc))))
 
 (defn render-canvas!
   [window-width]
@@ -128,7 +126,9 @@
     (reagent/create-class
      {:component-did-update
       (fn []
-        (let [canvas (.-firstChild @dom-node)]
+        (let [canvas (.-firstChild (.-firstChild @dom-node))]
+          (println "hi")
+          (.clearRect (.getContext canvas "2d") 0 0 (.-width canvas) (.-height canvas))
           (draw! canvas)))
 
       :component-did-mount
@@ -140,8 +140,9 @@
         @window-width ;; trigger re-render
         @active-triangle-plot-type
         [:div.canvas-container
-         [:canvas (if-let [node @dom-node]
-                    {:width (.-clientWidth node) :height (.-clientHeight node)})]])})))
+         [:div.canvas-inner-container
+          [:canvas (if-let [node @dom-node]
+                     {:width (.-clientWidth node) :height (.-clientHeight node)})]]])})))
 
 (defn sierpinski-triangle [window-width]
   [:<>
@@ -152,10 +153,8 @@
              (let [is-active (= @active-triangle-plot-type i)]
                [switcher-a
                 is-active
-                #(when-not is-active
-                   (reset! active-triangle-plot-type i)
-                   (reset! scale (get-in triangle-plot-types [i :scale])))
+                #(when-not is-active (reset! active-triangle-plot-type i))
                 (:name type)]))
            triangle-plot-types))]
-   [:div.controls-post-canvas-right [:span "num-rows: " @num-rows " | cells: " @num-cells]]
+   [:div.controls-post-canvas-right [:span "rows: " @num-rows " | squares drawn: " @num-squares]]
    [render-canvas! window-width]])

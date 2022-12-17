@@ -3,8 +3,7 @@
    [reagent.core :as reagent :refer [atom]]
    [reagent.dom :as rdom]))
 
-(def max-iterations 4)
-(def mi (atom 2))
+(def num-iterations (atom 3))
 (def num-squares (atom 0))
 
 (defn draw-the-center-square
@@ -20,7 +19,7 @@
     (let [inner-square-x (+ x (* inner-square-size m))
           inner-square-y (+ y (* inner-square-size n))]
       (draw-the-center-square context inner-square-x inner-square-y inner-square-size)
-      (when (< iteration-count @mi)
+      (when (< iteration-count @num-iterations)
         (recursively-draw-the-other-eight-squares (inc iteration-count) context inner-square-x inner-square-y (/ inner-square-size 3))))))
 
 ;; canvas
@@ -37,6 +36,9 @@
         inner-square-size (/ canvas-square-size 3)
         x-offset (if (= short-edge :height) (/ (- long short) 2) 0)
         y-offset (if (= short-edge :width) (/ (- long short) 2) 0)]
+    (.setAttribute canvas "height" canvas-height)
+    (.setAttribute canvas "width" canvas-width)
+
     ;; first, draw the largest square in the middle:
     ;; . . .
     ;; . X .
@@ -46,11 +48,8 @@
     ;; X X X
     ;; X . X
     ;; X X X
-    (when (> @mi 0)
-      (recursively-draw-the-other-eight-squares 1 context x-offset y-offset inner-square-size)
-      )))
-
-(def window-width (atom nil))
+    (when (> @num-iterations 0)
+      (recursively-draw-the-other-eight-squares 1 context x-offset y-offset inner-square-size))))
 
 (defn render-canvas!
   [window-width]
@@ -58,7 +57,7 @@
     (reagent/create-class
      {:component-did-update
       (fn []
-        (let [canvas (.-firstChild @dom-node)]
+        (let [canvas (.-firstChild (.-firstChild @dom-node))]
           (draw! canvas)))
 
       :component-did-mount
@@ -68,20 +67,21 @@
       :reagent-render
       (fn []
         @window-width ;; trigger re-render
-        @mi
+        @num-iterations
         [:div.canvas-container
-         [:canvas (if-let [node @dom-node]
-                    {:width (.-clientWidth node) :height (.-clientHeight node)})]])})))
+         [:div.canvas-inner-container
+          [:canvas (if-let [node @dom-node]
+                     {:width (.-clientWidth node) :height (.-clientHeight node)})]]])})))
 
 (defn sierpinski-carpet [window-width]
   [:<>
    [:div.controls-post-canvas-left
     [:div.inc-dec
      [:span "iterations:"]
-     [:a.box-button {:class (when (< @mi 1) "inactive")
-                     :on-click #(when (pos? @mi) (swap! mi dec))} "-"]
-     [:span @mi]
-     [:a.box-button {:class (when (> @mi 4) "inactive")
-                     :on-click #(when (<= @mi 4) (swap! mi inc))} "+"]]]
+     [:a.box-button {:class (when (< @num-iterations 1) "inactive")
+                     :on-click #(when (pos? @num-iterations) (swap! num-iterations dec))} "-"]
+     [:span @num-iterations]
+     [:a.box-button {:class (when (> @num-iterations 4) "inactive")
+                     :on-click #(when (<= @num-iterations 4) (swap! num-iterations inc))} "+"]]]
    [:div.controls-post-canvas-right [:span "squares drawn: " @num-squares]]
    [render-canvas! window-width]])

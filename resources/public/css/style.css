@@ -116,14 +116,21 @@ div.controls-post-canvas-right {
 }
 
 div.canvas-container {
+  position: relative;
   flex: 1;
-  height: 100%;
   width: 95%;
   margin-left: auto;
   margin-right: auto;
 }
+div.canvas-inner-container {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
 canvas {
-  background: var(--gray-f4);
   max-height: 100%;
   max-width: 100% !important;
+  background: var(--gray-f4);
 }

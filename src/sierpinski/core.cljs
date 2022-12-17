@@ -8,11 +8,11 @@
    [sierpinski.triangle :refer [sierpinski-triangle]]))
 
 (def sierpinski-options
-  [{:name "triangle"
-    :component sierpinski-triangle}
-   {:name "carpet"
-    :component sierpinski-carpet}])
-(def current-sierpinski-option (atom 1))
+  [{:name "carpet"
+    :component sierpinski-carpet}
+   {:name "triangle"
+    :component sierpinski-triangle}])
+(def current-sierpinski-option (atom 0))
 
 (def window-width (atom nil))
 
