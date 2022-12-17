@@ -1,4 +1,5 @@
 :root {
+  --extra-light-gray: #f4f4f4;
   --light-gray: #aaa;
   --gray: #666;
   --dark-gray: #444;
@@ -73,7 +74,7 @@ div.canvas-container {
   margin-right: auto;
 }
 canvas {
-  background: #f4f4f4;
+  background: var(--extra-light-gray);
   max-height: 100%;
   max-width: 100% !important;
 }

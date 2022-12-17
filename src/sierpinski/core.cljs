@@ -12,7 +12,7 @@
     :component sierpinski-triangle}
    {:name "carpet"
     :component sierpinski-carpet}])
-(def current-sierpinski-option (atom 0))
+(def current-sierpinski-option (atom 1))
 
 (defn main []
   (let
