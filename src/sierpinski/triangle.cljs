@@ -127,7 +127,6 @@
      {:component-did-update
       (fn []
         (let [canvas (.-firstChild (.-firstChild @dom-node))]
-          (println "hi")
           (.clearRect (.getContext canvas "2d") 0 0 (.-width canvas) (.-height canvas))
           (draw! canvas)))
 
