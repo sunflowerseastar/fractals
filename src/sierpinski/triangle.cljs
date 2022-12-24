@@ -1,9 +1,7 @@
 (ns sierpinski.triangle
   (:require
    [reagent.core :as reagent :refer [atom]]
-   [reagent.dom :as rdom]
-   [sierpinski.components :refer [switcher-a]]
-   ))
+   [sierpinski.components :refer [render-canvas! switcher-a]]))
 
 ;; utility
 (def scale 1)
@@ -106,12 +104,12 @@
         ;; each 1 in the sierpinski-triangle-rows becomes a "plot"
         plots ((:plot-fn triangle-plot-type) canvas-width canvas-height sierpinski-triangle-rows)]
 
+    (.setAttribute canvas "height" canvas-height)
+    (.setAttribute canvas "width" canvas-width)
+
     ;; update controls-post-canvas-left
     (reset! num-rows (count sierpinski-triangle-rows))
-    ;; (reset! num-squares (count plots))
     ;; adjust scale
-    ;; (println "scale: " @scale)
-    ;; (.scale context (:scale triangle-plot-type) (:scale triangle-plot-type))
     (.scale context scale scale)
     ;; plot triangle points
     (doseq [p plots]
@@ -119,29 +117,6 @@
                  (:plot-rectangle-size triangle-plot-type)
                  (:plot-rectangle-size triangle-plot-type))
       (swap! num-squares inc))))
-
-(defn render-canvas!
-  [window-width]
-  (let [dom-node (reagent/atom nil)]
-    (reagent/create-class
-     {:component-did-update
-      (fn []
-        (let [canvas (.-firstChild (.-firstChild @dom-node))]
-          (.clearRect (.getContext canvas "2d") 0 0 (.-width canvas) (.-height canvas))
-          (draw! canvas)))
-
-      :component-did-mount
-      (fn [this]
-        (reset! dom-node (rdom/dom-node this)))
-
-      :reagent-render
-      (fn []
-        @window-width ;; trigger re-render
-        @active-triangle-plot-type
-        [:div.canvas-container
-         [:div.canvas-inner-container
-          [:canvas (if-let [node @dom-node]
-                     {:width (.-clientWidth node) :height (.-clientHeight node)})]]])})))
 
 (defn sierpinski-triangle [window-width]
   [:<>
@@ -156,4 +131,4 @@
                 (:name type)]))
            triangle-plot-types))]
    [:div.controls-post-canvas-right [:span "rows: " @num-rows " | squares drawn: " @num-squares]]
-   [render-canvas! window-width]])
+   [render-canvas! draw! window-width active-triangle-plot-type]])

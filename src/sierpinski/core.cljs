@@ -5,11 +5,14 @@
    [reagent.dom :as rdom]
    [sierpinski.components :refer [switcher-a]]
    [sierpinski.curve :refer [sierpinski-curve]]
+   [sierpinski.koch :refer [sierpinski-koch]]
    [sierpinski.carpet :refer [sierpinski-carpet]]
    [sierpinski.triangle :refer [sierpinski-triangle]]))
 
 (def sierpinski-options
-  [{:name "curve"
+  [{:name "koch"
+    :component sierpinski-koch}
+   {:name "curve"
     :component sierpinski-curve}
    {:name "carpet"
     :component sierpinski-carpet}

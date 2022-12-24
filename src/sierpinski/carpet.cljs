@@ -1,7 +1,7 @@
 (ns sierpinski.carpet
   (:require
    [reagent.core :as reagent :refer [atom]]
-   [reagent.dom :as rdom]))
+   [sierpinski.components :refer [render-canvas!]]))
 
 (def num-iterations (atom 3))
 (def num-squares (atom 0))
@@ -51,28 +51,6 @@
     (when (> @num-iterations 0)
       (recursively-draw-the-other-eight-squares 1 context x-offset y-offset inner-square-size))))
 
-(defn render-canvas!
-  [window-width]
-  (let [dom-node (reagent/atom nil)]
-    (reagent/create-class
-     {:component-did-update
-      (fn []
-        (let [canvas (.-firstChild (.-firstChild @dom-node))]
-          (draw! canvas)))
-
-      :component-did-mount
-      (fn [this]
-        (reset! dom-node (rdom/dom-node this)))
-
-      :reagent-render
-      (fn []
-        @window-width ;; trigger re-render
-        @num-iterations
-        [:div.canvas-container
-         [:div.canvas-inner-container
-          [:canvas (if-let [node @dom-node]
-                     {:width (.-clientWidth node) :height (.-clientHeight node)})]]])})))
-
 (defn sierpinski-carpet [window-width]
   [:<>
    [:div.controls-post-canvas-left
@@ -84,4 +62,4 @@
      [:a.box-button {:class (when (> @num-iterations 4) "inactive")
                      :on-click #(when (<= @num-iterations 4) (swap! num-iterations inc))} "+"]]]
    [:div.controls-post-canvas-right [:span "squares drawn: " @num-squares]]
-   [render-canvas! window-width]])
+   [render-canvas! draw! window-width num-iterations]])
