@@ -80,6 +80,12 @@ div.post-canvas {
 
 div.switcher {
   margin-left: calc(-1 * var(--space-sm));
+  display: inline-block;
+  /* border: 1px solid cyan; */
+}
+div.inc-dec {
+  display: inline-block;
+  /* border: 1px solid magenta; */
 }
 div.switcher a {
   /* color: var(--gray-aaa); */
