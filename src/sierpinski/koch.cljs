@@ -2,7 +2,8 @@
   (:require
    [reagent.core :as reagent :refer [atom]]
    [sierpinski.components :refer [render-canvas!]]
-   [sierpinski.l-system :refer [l-system]]))
+   [sierpinski.l-system :refer [l-system]]
+   [sierpinski.turtle :refer [draw-turtle!]]))
 
 (def x (atom 200))
 (def y (atom 200))
@@ -17,29 +18,6 @@
    :start [:F :- :F :- :F :- :F]
    :rules {:F [:F :- :F :+ :F :+ :F :F :- :F :- :F :+ :F]}
    :actions {:F :forward :+ :left :- :right}})
-
-(defn draw-forward! [context]
-  (let [theta (/ (* Math/PI @angle) 180.0)
-        new-x (+ @x (* @step (Math/cos theta)))
-        new-y (- @y (* @step (Math/sin theta)))]
-    (reset! x new-x)
-    (reset! y new-y)
-    (.lineTo context new-x new-y)
-    (swap! num-lines inc)))
-
-(defn draw-turtle! [context grammar sentence]
-  (doseq [letter (filter identity sentence)]
-    (let [action (letter (:actions grammar))]
-      (cond
-        (= action :forward)
-        (draw-forward! context)
-        (= action :left)
-        (swap! angle #(mod (+ % 90) 360))
-        (= action :right)
-        (swap! angle #(mod (- % 90) 360))))))
-
-;; equilateral triangle height
-(defn eth [len] (/ (* (Math/sqrt 3) len) 2))
 
 ;; canvas
 (defn draw!
@@ -83,7 +61,7 @@
 
     ;; draw
     (.lineTo context starting-x starting-y)
-    (draw-turtle! context koch-quadratic-island-grammar sentence)
+    (draw-turtle! context x y step angle num-lines koch-quadratic-island-grammar sentence)
     (.stroke context)))
 
 
