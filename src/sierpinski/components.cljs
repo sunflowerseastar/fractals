@@ -10,13 +10,13 @@
 
 (defn render-canvas!
   [draw-fn & redraw-atoms]
-  (println redraw-atoms)
+  ;; (println redraw-atoms)
   (let [dom-node (reagent/atom nil)]
     (reagent/create-class
      {:component-did-update
       (fn []
         (let [canvas (.-firstChild (.-firstChild @dom-node))]
-          (println "!! redraw")
+          ;; (println "!! redraw")
           (draw-fn canvas)))
 
       :component-did-mount

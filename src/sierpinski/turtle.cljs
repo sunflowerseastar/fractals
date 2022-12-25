@@ -9,13 +9,13 @@
     (.lineTo context new-x new-y)
     (swap! num-lines inc)))
 
-(defn draw-turtle! [context x y step angle num-lines grammar sentence]
+(defn draw-turtle! [context x y step angle delta num-lines grammar sentence]
   (doseq [letter (filter identity sentence)]
     (let [action (letter (:actions grammar))]
       (cond
         (= action :forward)
         (draw-forward! context x y step angle num-lines)
         (= action :left)
-        (swap! angle #(mod (+ % 90) 360))
+        (swap! angle #(mod (+ % delta) 360))
         (= action :right)
-        (swap! angle #(mod (- % 90) 360))))))
+        (swap! angle #(mod (- % delta) 360))))))

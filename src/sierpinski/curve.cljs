@@ -1,6 +1,7 @@
 (ns sierpinski.curve
   (:require
    [reagent.core :as reagent :refer [atom]]
+   [sierpinski.utility :refer [get-centered-equilateral-triangle-canvas-positioning]]
    [sierpinski.components :refer [render-canvas!]]
    [sierpinski.l-system :refer [l-system]]))
 
@@ -51,39 +52,17 @@
           (swap! angle #(mod ((if is-flipped + -) % 60) 360)))))))
 
 ;; equilateral triangle height
-(defn eth [len] (/ (* (Math/sqrt 3) len) 2))
+;; (defn eth [len] (/ (* (Math/sqrt 3) len) 2))
 
 ;; canvas
 (defn draw!
   [canvas]
   (let [context (.getContext canvas "2d")
-        ;; calculate the positioning of the triangle. And by "triangle," I mean
-        ;; the resulting triangle-ish Sierpinski curve.
-        canvas-padding-px 20
-        canvas-width (- (-> context .-canvas .-clientWidth) (* 2 canvas-padding-px))
-        canvas-height (- (-> context .-canvas .-clientHeight) (* 2 canvas-padding-px))
-
-        ;; get the height of the resulting triangle if it was based on the
-        ;; canvas width/height
-        canvas-width-eth (eth canvas-width)
-        canvas-height-eth (eth canvas-height)
-
-        ;; if we drew the triangle based on the canvas width, would it be taller
-        ;; than the canvas?...
-        is-triangle-taller-than-canvas-height (> canvas-width-eth canvas-height)
-        ;; ...and then determine whether the triangle size will be based on the
-        ;; width or the height
-        triangle-length (if is-triangle-taller-than-canvas-height canvas-height-eth canvas-width)
-
-        ;; from there, figure out the [bottom left] starting x/y position in
-        ;; order to center the triangle in the canvas
-        starting-x (if is-triangle-taller-than-canvas-height
-                     (+ (- (/ canvas-width 2) (/ canvas-height-eth 2)) canvas-padding-px)
-                     canvas-padding-px)
-        starting-y (if is-triangle-taller-than-canvas-height
-                     canvas-height
-                     (- canvas-height (/ (- canvas-height canvas-width-eth) 2)))
-
+        [starting-x starting-y triangle-length]
+        (get-centered-equilateral-triangle-canvas-positioning
+         (-> context .-canvas .-clientWidth)
+         (-> context .-canvas .-clientHeight)
+         20)
         sentence (drop 1 (l-system sierpinski-curve-grammar @num-iterations))]
 
     ;; setup
