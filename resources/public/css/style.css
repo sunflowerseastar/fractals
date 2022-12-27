@@ -64,7 +64,7 @@ a.box-button.inactive:hover {
   border: 1px solid var(--gray-ddd);
 }
 
-div.pre-canvas {
+div.header {
   padding-left: 2.5%;
   padding-right: 2.5%;
   height: var(--space-40);
@@ -73,7 +73,7 @@ div.pre-canvas {
   justify-content: space-between;
   align-items: center;
 }
-div.post-canvas {
+div.footer {
   height: var(--space-40);
   flex-shrink: 0;
 }
@@ -100,7 +100,7 @@ div.switcher a.is-active:hover {
   color: var(--gray-444);
   cursor: default;
 }
-div.controls-post-canvas-left {
+div.controls {
   position: absolute;
   bottom: 0;
   left: 2.5%;
@@ -110,15 +110,21 @@ div.controls-post-canvas-left {
   justify-content: center;
 }
 
-div.controls-post-canvas-right {
+div.meta {
   position: absolute;
-  bottom: 0;
+  top: 0;
   right: 2.5%;
   height: var(--space-40);
   display: flex;
   flex-direction: column;
   justify-content: center;
   cursor: default;
+}
+@media (min-width: 768px) {
+  div.meta {
+    top: auto;
+    bottom: 0;
+  }
 }
 
 div.canvas-container {

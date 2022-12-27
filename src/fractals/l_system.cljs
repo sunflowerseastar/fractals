@@ -1,4 +1,4 @@
-(ns sierpinski.l-system)
+(ns fractals.l-system)
 
 (defn is-variable? [grammar symbol]
   (contains? (:variables grammar) symbol))

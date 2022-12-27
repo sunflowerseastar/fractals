@@ -1,7 +1,7 @@
-(ns sierpinski.core-test
+(ns fractals.core-test
     (:require
      [cljs.test :refer-macros [deftest is testing]]
-     ;; [sierpinski.core :refer [multiply]]
+     ;; [fractals.core :refer [multiply]]
      ))
 
 ;; (deftest multiply-test

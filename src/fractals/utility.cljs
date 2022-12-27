@@ -1,4 +1,4 @@
-(ns sierpinski.utility)
+(ns fractals.utility)
 
 ;; equilateral triangle height
 (defn eth [len] (/ (* (Math/sqrt 3) len) 2))

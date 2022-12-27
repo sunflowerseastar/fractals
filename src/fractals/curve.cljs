@@ -1,15 +1,15 @@
-(ns sierpinski.curve
+(ns fractals.curve
   (:require
    [reagent.core :as reagent :refer [atom]]
-   [sierpinski.utility :refer [get-centered-equilateral-triangle-canvas-positioning]]
-   [sierpinski.components :refer [render-canvas!]]
-   [sierpinski.l-system :refer [l-system]]))
+   [fractals.utility :refer [get-centered-equilateral-triangle-canvas-positioning]]
+   [fractals.components :refer [render-canvas!]]
+   [fractals.l-system :refer [l-system]]))
 
 (def x (atom 200))
 (def y (atom 200))
 (def angle (atom 0))
 (def step (atom 20))
-(def num-iterations (atom 4))
+(def num-iterations (atom 5))
 (def num-lines (atom 0))
 
 ;; Alphabet: X, Y
@@ -82,7 +82,7 @@
 
 (defn sierpinski-curve [window-width]
   [:<>
-   [:div.controls-post-canvas-left
+   [:div.controls
     [:div.inc-dec
      [:span "iterations:"]
      [:a.box-button {:class (when (< @num-iterations 1) "inactive")
@@ -90,5 +90,5 @@
      [:span @num-iterations]
      [:a.box-button {:class (when (>= @num-iterations 9) "inactive")
                      :on-click #(when (< @num-iterations 9) (swap! num-iterations inc))} "+"]]]
-   [:div.controls-post-canvas-right [:span "lines drawn: " @num-lines]]
+   [:div.meta [:span "lines drawn: " @num-lines]]
    [render-canvas! draw! window-width num-iterations]])

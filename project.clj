@@ -1,4 +1,4 @@
-(defproject sierpinski "0.2.0"
+(defproject fractals "0.2.0"
   :description "canvas drawings of Sierpinski triangle"
   :url "https://github.com/sunflowerseastar/sierpinski"
   :license {:name "Eclipse Public License"
@@ -16,7 +16,7 @@
 
   :aliases {"fig:build" ["trampoline" "run" "-m" "figwheel.main" "-b" "dev" "-r"]
             "fig:min"   ["run" "-m" "figwheel.main" "-O" "advanced" "-bo" "dev"]
-            "fig:test"  ["run" "-m" "figwheel.main" "-co" "test.cljs.edn" "-m" "sierpinski.test-runner"]}
+            "fig:test"  ["run" "-m" "figwheel.main" "-co" "test.cljs.edn" "-m" "fractals.test-runner"]}
 
   :profiles {:dev {:dependencies [[com.bhauman/figwheel-main "0.2.17"]
                                   [org.slf4j/slf4j-nop "1.7.30"]

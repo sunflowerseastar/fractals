@@ -1,8 +1,8 @@
 ;; This test runner is intended to be run from the command line
-(ns sierpinski.test-runner
+(ns fractals.test-runner
   (:require
     ;; require all the namespaces that you want to test
-    [sierpinski.core-test]
+    [fractals.core-test]
     [figwheel.main.testing :refer [run-tests-async]]))
 
 (defn -main [& args]

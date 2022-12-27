@@ -1,4 +1,4 @@
-(ns sierpinski.turtle)
+(ns fractals.turtle)
 
 (defn draw-forward! [context x y step angle num-lines]
   (let [theta (/ (* Math/PI @angle) 180.0)

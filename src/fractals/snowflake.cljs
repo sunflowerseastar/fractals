@@ -1,10 +1,10 @@
-(ns sierpinski.snowflake
+(ns fractals.snowflake
   (:require
    [reagent.core :as reagent :refer [atom]]
-   [sierpinski.utility :refer [get-centered-equilateral-triangle-canvas-positioning get-centered-snowflake-canvas-positioning]]
-   [sierpinski.components :refer [render-canvas! switcher-a]]
-   [sierpinski.l-system :refer [l-system]]
-   [sierpinski.turtle :refer [draw-turtle!]]))
+   [fractals.utility :refer [get-centered-equilateral-triangle-canvas-positioning get-centered-snowflake-canvas-positioning]]
+   [fractals.components :refer [render-canvas! switcher-a]]
+   [fractals.l-system :refer [l-system]]
+   [fractals.turtle :refer [draw-turtle!]]))
 
 (def x (atom 200))
 (def y (atom 200))
@@ -77,7 +77,7 @@
   (let [num-iterations (get koch-iterations @active-koch-variation)
         max-iterations (:max-iterations (get koch-variations @active-koch-variation))]
     [:<>
-     [:div.controls-post-canvas-left
+     [:div.controls
       [:div
        (into [:div.switcher]
              (map-indexed
@@ -96,6 +96,6 @@
         [:span @num-iterations]
         [:a.box-button {:class (when (>= @num-iterations max-iterations) "inactive")
                         :on-click #(when (< @num-iterations max-iterations) (swap! num-iterations inc))} "+"]]]]
-     [:div.controls-post-canvas-right [:span "lines drawn: " @num-lines]]
+     [:div.meta [:span "lines drawn: " @num-lines]]
      ;; the concat is to include all the koch-iterations as redraw-atoms
      [apply render-canvas! (concat [draw! window-width active-koch-variation] koch-iterations)]]))

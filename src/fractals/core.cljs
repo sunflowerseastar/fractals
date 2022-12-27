@@ -1,16 +1,16 @@
-(ns ^:figwheel-hooks sierpinski.core
+(ns ^:figwheel-hooks fractals.core
   (:require
    [goog.dom :as gdom]
    [reagent.core :as reagent :refer [atom]]
    [reagent.dom :as rdom]
-   [sierpinski.components :refer [switcher-a]]
-   [sierpinski.curve :refer [sierpinski-curve]]
-   [sierpinski.snowflake :refer [snowflake]]
-   [sierpinski.quadratic-island :refer [quadratic-island]]
-   [sierpinski.carpet :refer [sierpinski-carpet]]
-   [sierpinski.triangle :refer [sierpinski-triangle]]))
+   [fractals.components :refer [switcher-a]]
+   [fractals.curve :refer [sierpinski-curve]]
+   [fractals.snowflake :refer [snowflake]]
+   [fractals.quadratic-island :refer [quadratic-island]]
+   [fractals.carpet :refer [sierpinski-carpet]]
+   [fractals.triangle :refer [sierpinski-triangle]]))
 
-(def sierpinski-options
+(def fractals-options
   [{:name "snowflake"
     :component snowflake}
    {:name "quadratic-island"
@@ -21,27 +21,27 @@
     :component sierpinski-carpet}
    {:name "triangle"
     :component sierpinski-triangle}])
-(def current-sierpinski-option (atom 0))
+(def current-fractals-option (atom 0))
 
 (def window-width (atom nil))
 
 (defn main []
   (let
-      [current-sierpinski-component
-       (:component (get sierpinski-options @current-sierpinski-option))]
+      [current-fractals-component
+       (:component (get fractals-options @current-fractals-option))]
     [:<>
-     [:div.pre-canvas
+     [:div.header
       (into [:div.switcher]
             (map-indexed
              (fn [i option]
-               (let [is-active (= @current-sierpinski-option i)]
+               (let [is-active (= @current-fractals-option i)]
                  [switcher-a
                   is-active
-                  #(when-not is-active (reset! current-sierpinski-option i))
+                  #(when-not is-active (reset! current-fractals-option i))
                   (:name option)]))
-             sierpinski-options))]
-     [current-sierpinski-component window-width]
-     [:div.post-canvas]]))
+             fractals-options))]
+     [current-fractals-component window-width]
+     [:div.footer]]))
 
 (defn on-window-resize [evt]
   (reset! window-width (.-innerWidth js/window)))

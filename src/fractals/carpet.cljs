@@ -1,9 +1,9 @@
-(ns sierpinski.carpet
+(ns fractals.carpet
   (:require
    [reagent.core :as reagent :refer [atom]]
-   [sierpinski.components :refer [render-canvas!]]))
+   [fractals.components :refer [render-canvas!]]))
 
-(def num-iterations (atom 3))
+(def num-iterations (atom 2))
 (def num-squares (atom 0))
 
 (defn draw-the-center-square
@@ -53,7 +53,7 @@
 
 (defn sierpinski-carpet [window-width]
   [:<>
-   [:div.controls-post-canvas-left
+   [:div.controls
     [:div.inc-dec
      [:span "iterations:"]
      [:a.box-button {:class (when (< @num-iterations 1) "inactive")
@@ -61,5 +61,5 @@
      [:span @num-iterations]
      [:a.box-button {:class (when (> @num-iterations 4) "inactive")
                      :on-click #(when (<= @num-iterations 4) (swap! num-iterations inc))} "+"]]]
-   [:div.controls-post-canvas-right [:span "squares drawn: " @num-squares]]
+   [:div.meta [:span "squares drawn: " @num-squares]]
    [render-canvas! draw! window-width num-iterations]])
