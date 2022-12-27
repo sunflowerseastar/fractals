@@ -1,7 +1,7 @@
 (ns sierpinski.snowflake
   (:require
    [reagent.core :as reagent :refer [atom]]
-   [sierpinski.utility :refer [get-centered-snowflake-canvas-positioning]]
+   [sierpinski.utility :refer [get-centered-equilateral-triangle-canvas-positioning get-centered-snowflake-canvas-positioning]]
    [sierpinski.components :refer [render-canvas! switcher-a]]
    [sierpinski.l-system :refer [l-system]]
    [sierpinski.turtle :refer [draw-turtle!]]))
@@ -26,33 +26,37 @@
     :step-division 5
     :canvas-inner-square-size #(/ (* % 3) 5)
     :inner-square-padding #(/ % 3)
-    :max-iterations 4}
-   {:name "wip alt"
+    :max-iterations 6
+    :positioning-fn get-centered-snowflake-canvas-positioning
+    }
+   {:name "antisnowflake"
     :variables #{:F}
     :constants #{:+ :-}
-    :start [:F :- :F :- :F :- :F]
-    :rules {:F [:F :- :F :+ :F :+ :F :F :- :F :- :F :+ :F]}
+    :start [:F :- :- :F :- :- :F]
+    :rules {:F [:F :- :F :+ :+ :F :- :F]}
     :actions {:F :forward :+ :left :- :right}
-    :starting-angle 90
-    :delta 90
-    :step-division 4
+    :starting-angle 60
+    :delta 60
+    :step-division 5
     :canvas-inner-square-size #(/ (* % 3) 5)
     :inner-square-padding #(/ % 3)
-    :max-iterations 4}])
+    :max-iterations 6
+    :positioning-fn get-centered-equilateral-triangle-canvas-positioning
+    }])
 
 ;; create a separate num-iterations atom for each variation
-(def koch-iterations [(atom 1) (atom 1)])
+(def koch-iterations [(atom 2) (atom 1)])
 
 ;; canvas
 (defn draw!
   [canvas]
   (let [context (.getContext canvas "2d")
+        grammar (get koch-variations @active-koch-variation)
         [starting-x starting-y triangle-length]
-        (get-centered-snowflake-canvas-positioning
+        ((:positioning-fn grammar)
          (-> context .-canvas .-clientWidth)
          (-> context .-canvas .-clientHeight)
          20)
-        grammar (get koch-variations @active-koch-variation)
         sentence (l-system grammar @(get koch-iterations @active-koch-variation))]
 
     ;; setup

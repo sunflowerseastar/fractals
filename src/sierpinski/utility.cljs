@@ -37,7 +37,7 @@
                         canvas-padding-px)
                      canvas-padding-px)
         starting-y (if is-triangle-taller-than-canvas-height
-                     canvas-height-padded
+                     (+ canvas-height-padded canvas-padding-px)
                      (- canvas-height-padded (/ (- canvas-height-padded canvas-width-eth) 2)))]
     [starting-x starting-y triangle-length]))
 
