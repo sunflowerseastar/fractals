@@ -27,8 +27,7 @@
     :canvas-inner-square-size #(/ (* % 3) 5)
     :inner-square-padding #(/ % 3)
     :max-iterations 6
-    :positioning-fn get-centered-snowflake-canvas-positioning
-    }
+    :positioning-fn get-centered-snowflake-canvas-positioning}
    {:name "antisnowflake"
     :variables #{:F}
     :constants #{:+ :-}
@@ -41,8 +40,7 @@
     :canvas-inner-square-size #(/ (* % 3) 5)
     :inner-square-padding #(/ % 3)
     :max-iterations 6
-    :positioning-fn get-centered-equilateral-triangle-canvas-positioning
-    }])
+    :positioning-fn get-centered-equilateral-triangle-canvas-positioning}])
 
 ;; create a separate num-iterations atom for each variation
 (def koch-iterations [(atom 2) (atom 1)])

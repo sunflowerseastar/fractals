@@ -12,6 +12,7 @@
   --space-40: 40px;
 
   --transition-fast: 90ms;
+  --transition-medium: 180ms;
 }
 html,
 body {
@@ -72,20 +73,15 @@ div.header {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  color: black;
+  cursor: default;
 }
 div.footer {
   height: var(--space-40);
   flex-shrink: 0;
 }
-
 div.switcher {
-  margin-left: calc(-1 * var(--space-sm));
   display: inline-block;
-  /* border: 1px solid cyan; */
-}
-div.inc-dec {
-  display: inline-block;
-  /* border: 1px solid magenta; */
 }
 div.switcher a {
   /* color: var(--gray-aaa); */
@@ -99,6 +95,10 @@ div.switcher a.is-active {
 div.switcher a.is-active:hover {
   color: var(--gray-444);
   cursor: default;
+}
+div.inc-dec {
+  display: inline-block;
+  /* border: 1px solid magenta; */
 }
 div.controls {
   position: absolute;
@@ -145,4 +145,92 @@ canvas {
   max-height: 100%;
   max-width: 100% !important;
   background: var(--gray-f4);
+}
+
+.hamburger {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  padding: 0 var(--space-sm);
+  cursor: pointer;
+}
+@media (min-width: 768px) {
+  .hamburger {
+    top: 0;
+    bottom: auto;
+    padding: var(--space-xs) var(--space-sm);
+  }
+}
+.hamburger svg {
+  padding: var(--space-xs);
+  width: 26px;
+  overflow: initial;
+  transition: all var(--transition-medium);
+  fill: black;
+}
+.hamburger.is-nav-active svg {
+  fill: white;
+}
+@media (min-width: 768px) {
+  .hamburger svg {
+    width: 30px;
+  }
+}
+.hamburger:hover svg {
+  transform: rotate(-20deg);
+}
+.is-nav-active .hamburger {
+  background: none;
+}
+.is-nav-active .hamburger svg {
+  fill: white;
+}
+
+.nav-container {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: black;
+  color: white;
+  pointer-events: none;
+  opacity: 0;
+  transition: all var(--transition-medium);
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: 100%;
+}
+.nav-container.is-nav-active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+div.nav {
+  /* margin-left: calc(-1 * var(--space-sm)); */
+  /* display: inline-block; */
+  /* border: 1px solid magenta; */
+  padding-right: 40px;
+  padding-bottom: 40px;
+  margin: 0 auto;
+  max-width: 300px;
+}
+div.nav a {
+  /* color: var(--gray-aaa); */
+  display: block;
+  /* border: 1px solid cyan; */
+  padding: var(--space-sm);
+  font-size: 1.2em;
+}
+div.nav a:hover {
+  /* color: var(--gray-666); */
+}
+div.nav a.is-active {
+  color: var(--gray-444);
+}
+div.nav a.is-active:hover {
+  color: var(--gray-444);
+  cursor: default;
 }

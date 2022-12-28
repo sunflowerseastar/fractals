@@ -1,4 +1,4 @@
-(defproject fractals "0.2.0"
+(defproject fractals "0.3.0"
   :description "canvas drawings of Sierpinski triangle"
   :url "https://github.com/sunflowerseastar/sierpinski"
   :license {:name "Eclipse Public License"
@@ -10,7 +10,7 @@
                  [org.clojure/clojurescript "1.11.4"]
                  [cljsjs/react "17.0.2-0"]
                  [cljsjs/react-dom "17.0.2-0"]
-                 [reagent "1.1.1" ]]
+                 [reagent "1.1.1"]]
 
   :source-paths ["src"]
 

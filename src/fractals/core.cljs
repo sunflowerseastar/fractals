@@ -3,7 +3,7 @@
    [goog.dom :as gdom]
    [reagent.core :as reagent :refer [atom]]
    [reagent.dom :as rdom]
-   [fractals.components :refer [switcher-a]]
+   [fractals.components :refer [hamburger nav-a]]
    [fractals.curve :refer [sierpinski-curve]]
    [fractals.snowflake :refer [snowflake]]
    [fractals.quadratic-island :refer [quadratic-island]]
@@ -11,19 +11,21 @@
    [fractals.triangle :refer [sierpinski-triangle]]))
 
 (def fractals-options
-  [{:name "snowflake"
+  [{:name "koch snowflake"
     :component snowflake}
-   {:name "quadratic-island"
+   {:name "quadratic koch island"
     :component quadratic-island}
-   {:name "curve"
+   {:name "sierpiński curve"
     :component sierpinski-curve}
-   {:name "carpet"
+   {:name "sierpiński carpet"
     :component sierpinski-carpet}
-   {:name "triangle"
+   {:name "sierpiński triangle"
     :component sierpinski-triangle}])
 (def current-fractals-option (atom 0))
 
 (def window-width (atom nil))
+
+(def is-nav-active (atom false))
 
 (defn main []
   (let
@@ -31,17 +33,22 @@
        (:component (get fractals-options @current-fractals-option))]
     [:<>
      [:div.header
-      (into [:div.switcher]
+      [:span (:name (get fractals-options @current-fractals-option))]]
+     [current-fractals-component window-width]
+     [:div.footer]
+     [:div.nav-container {:class (when @is-nav-active "is-nav-active")}
+      (into [:div.nav]
             (map-indexed
              (fn [i option]
                (let [is-active (= @current-fractals-option i)]
-                 [switcher-a
+                 [nav-a
                   is-active
-                  #(when-not is-active (reset! current-fractals-option i))
+                  #(when-not is-active
+                     (reset! current-fractals-option i)
+                     (swap! is-nav-active not))
                   (:name option)]))
              fractals-options))]
-     [current-fractals-component window-width]
-     [:div.footer]]))
+     [hamburger #(swap! is-nav-active not) @is-nav-active]]))
 
 (defn on-window-resize [evt]
   (reset! window-width (.-innerWidth js/window)))
