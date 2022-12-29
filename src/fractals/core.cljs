@@ -4,14 +4,17 @@
    [reagent.core :as reagent :refer [atom]]
    [reagent.dom :as rdom]
    [fractals.components :refer [hamburger nav-a]]
-   [fractals.curve :refer [sierpinski-curve]]
+   [fractals.koch-curves :refer [koch-curves]]
+   [fractals.sierpinski-curve :refer [sierpinski-curve]]
    [fractals.snowflake :refer [snowflake]]
    [fractals.quadratic-island :refer [quadratic-island]]
    [fractals.carpet :refer [sierpinski-carpet]]
    [fractals.triangle :refer [sierpinski-triangle]]))
 
 (def fractals-options
-  [{:name "koch snowflake"
+  [{:name "koch curves"
+    :component koch-curves}
+   {:name "koch snowflake"
     :component snowflake}
    {:name "quadratic koch island"
     :component quadratic-island}

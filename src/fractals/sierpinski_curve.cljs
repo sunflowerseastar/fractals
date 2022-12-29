@@ -1,4 +1,4 @@
-(ns fractals.curve
+(ns fractals.sierpinski-curve
   (:require
    [reagent.core :as reagent :refer [atom]]
    [fractals.utility :refer [get-centered-equilateral-triangle-canvas-positioning]]
@@ -38,7 +38,7 @@
     (.lineTo context new-x new-y)
     (swap! num-lines inc)))
 
-(defn draw-turtle! [context grammar sentence]
+(defn turtle-draw-to-canvas! [context grammar sentence]
   (let [is-flipped (even? @num-iterations)]
     (doseq [letter (filter identity sentence)]
       (let [action (letter (:actions grammar))]
@@ -61,8 +61,7 @@
         [starting-x starting-y triangle-length]
         (get-centered-equilateral-triangle-canvas-positioning
          (-> context .-canvas .-clientWidth)
-         (-> context .-canvas .-clientHeight)
-         20)
+         (-> context .-canvas .-clientHeight))
         sentence (drop 1 (l-system sierpinski-curve-grammar @num-iterations))]
 
     ;; setup
@@ -76,7 +75,7 @@
 
     ;; draw
     (.lineTo context starting-x starting-y)
-    (draw-turtle! context sierpinski-curve-grammar sentence)
+    (turtle-draw-to-canvas! context sierpinski-curve-grammar sentence)
     (draw-forward! context)
     (.stroke context)))
 

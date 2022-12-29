@@ -4,7 +4,7 @@
    [fractals.utility :refer [get-centered-equilateral-triangle-canvas-positioning get-centered-snowflake-canvas-positioning]]
    [fractals.components :refer [render-canvas! switcher-a]]
    [fractals.l-system :refer [l-system]]
-   [fractals.turtle :refer [draw-turtle!]]))
+   [fractals.turtle :refer [turtle-draw-to-canvas!]]))
 
 (def x (atom 200))
 (def y (atom 200))
@@ -53,8 +53,7 @@
         [starting-x starting-y triangle-length]
         ((:positioning-fn grammar)
          (-> context .-canvas .-clientWidth)
-         (-> context .-canvas .-clientHeight)
-         20)
+         (-> context .-canvas .-clientHeight))
         sentence (l-system grammar @(get koch-iterations @active-koch-variation))]
 
     ;; setup
@@ -68,7 +67,7 @@
 
     ;; draw
     (.lineTo context starting-x starting-y)
-    (draw-turtle! context x y step angle (:delta grammar) num-lines grammar sentence)
+    (turtle-draw-to-canvas! context x y step angle (:delta grammar) num-lines grammar sentence)
     (.stroke context)))
 
 (defn snowflake [window-width]

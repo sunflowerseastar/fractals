@@ -1,9 +1,10 @@
 (ns fractals.quadratic-island
   (:require
    [reagent.core :as reagent :refer [atom]]
+   [fractals.utility :refer [get-centered-square-canvas-positioning]]
    [fractals.components :refer [render-canvas! switcher-a]]
    [fractals.l-system :refer [l-system]]
-   [fractals.turtle :refer [draw-turtle!]]))
+   [fractals.turtle :refer [turtle-draw-to-canvas!]]))
 
 (def x (atom 200))
 (def y (atom 200))
@@ -23,9 +24,10 @@
     :starting-angle 90
     :delta 90
     :step-division 4
-    :canvas-inner-square-size #(/ (* % 3) 5)
-    :inner-square-padding #(/ % 3)
-    :max-iterations 4}
+    :canvas-inner-square-size-fn #(/ (* % 3) 5)
+    :inner-square-padding-fn #(/ % 3)
+    :max-iterations 4
+    :positioning-fn get-centered-square-canvas-positioning}
    {:name "alternate"
     :variables #{:F}
     :constants #{:+ :-}
@@ -35,9 +37,10 @@
     :starting-angle 90
     :delta 90
     :step-division 6
-    :canvas-inner-square-size #(/ % 2)
-    :inner-square-padding #(/ % 2)
-    :max-iterations 3}])
+    :canvas-inner-square-size-fn #(/ % 2)
+    :inner-square-padding-fn #(/ % 2)
+    :max-iterations 3
+    :positioning-fn get-centered-square-canvas-positioning}])
 
 ;; create a separate num-iterations atom for each variation
 (def koch-iterations [(atom 1) (atom 1)])
@@ -46,32 +49,13 @@
 (defn draw!
   [canvas]
   (let [context (.getContext canvas "2d")
-        ;; calculate the positioning of the triangle. And by "triangle," I mean
-        ;; the resulting triangle-ish Sierpinski curve.
-        canvas-padding-px 20
-        canvas-width (- (-> context .-canvas .-clientWidth) (* 2 canvas-padding-px))
-        canvas-height (- (-> context .-canvas .-clientHeight) (* 2 canvas-padding-px))
-
-        short-edge (if (< canvas-width canvas-height) :width :height)
-        short (if (= short-edge :width) canvas-width canvas-height)
-        long (if (= short-edge :width) canvas-height canvas-width)
-
         grammar (get koch-variations @active-koch-variation)
-
-        ;; Since the quadratic koch island goes outside the bounds of the
-        ;; original square on each iteration, it needs some extra padding. This
-        ;; will give the original square (the drawing of the axiom before any
-        ;; rewrites) enough padding to accommodate the iterations.
-        canvas-inner-square-size ((:canvas-inner-square-size grammar) short)
-        inner-square-padding ((:inner-square-padding grammar) canvas-inner-square-size)
-
-        starting-x (if (= short-edge :height) (+ (/ (- long short) 2) inner-square-padding canvas-padding-px)
-                       (+ canvas-padding-px inner-square-padding))
-        starting-y (if (= short-edge :width) (- (+ (/ (- long short) 2)
-                                                   canvas-width
-                                                   canvas-padding-px)
-                                                inner-square-padding)
-                       (- (+ canvas-height canvas-padding-px) inner-square-padding))
+        [starting-x starting-y canvas-inner-square-size]
+        ((:positioning-fn grammar)
+         (-> context .-canvas .-clientWidth)
+         (-> context .-canvas .-clientHeight)
+         (:canvas-inner-square-size-fn grammar)
+         (:inner-square-padding-fn grammar))
 
         sentence (l-system grammar @(get koch-iterations @active-koch-variation))]
 
@@ -87,7 +71,7 @@
 
     ;; draw
     (.lineTo context starting-x starting-y)
-    (draw-turtle! context x y step angle (:delta grammar) num-lines grammar sentence)
+    (turtle-draw-to-canvas! context x y step angle (:delta grammar) num-lines grammar sentence)
     (.stroke context)))
 
 

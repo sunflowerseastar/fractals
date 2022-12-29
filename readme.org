@@ -11,8 +11,6 @@ lein clean
 lein fig:min
 #+end_src
 
-This project was started from [[https://www.packtpub.com/product/clojure-data-structures-and-algorithms-cookbook/9781785281457][Clojure Data Structures and Algorithms Cookbook, by Rakif Naccache]].
-
 * diagrams
 
 #+begin_src
@@ -90,6 +88,9 @@ This is from [[https://www.packtpub.com/product/clojure-data-structures-and-algo
 
 * reference
 
+This project was inspired by and started from [[https://www.packtpub.com/product/clojure-data-structures-and-algorithms-cookbook/9781785281457][Clojure Data Structures and Algorithms Cookbook, by Rakif Naccache]]. Thank you for the great book, Rafik. =)
+
 - https://github.com/reagent-project/reagent-cookbook/tree/master/recipes/canvas-fills-div
 - https://piratefsh.github.io/2020/08/08/sierpinski-curve.html
 - https://piratefsh.github.io/2020/08/07/koch-tesselation-uncommon-fractal-implementations.html
+- https://www.r-bloggers.com/2017/06/a-shiny-app-to-draw-curves-based-on-l-system/
