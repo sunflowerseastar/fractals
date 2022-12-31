@@ -5,6 +5,7 @@
    [reagent.dom :as rdom]
    [fractals.components :refer [hamburger nav-a]]
    [fractals.koch-curves :refer [koch-curves]]
+   [fractals.more-koch-curves :refer [more-koch-curves]]
    [fractals.dragon-curve :refer [dragon-curve]]
    [fractals.sierpinski-curve :refer [sierpinski-curve]]
    [fractals.snowflake :refer [snowflake]]
@@ -16,12 +17,14 @@
   [
    {:name "koch curves"
     :component koch-curves}
-   {:name "dragon curve"
-    :component dragon-curve}
+   {:name "more koch curves"
+    :component more-koch-curves}
    {:name "koch snowflake"
     :component snowflake}
    {:name "quadratic koch island"
     :component quadratic-island}
+   {:name "dragon curve"
+    :component dragon-curve}
    {:name "sierpiński curve"
     :component sierpinski-curve}
    {:name "sierpiński carpet"
