@@ -10,6 +10,7 @@
     :rules {:F [:F :F :- :F :- :F :- :F :- :F :- :F :+ :F]}
     :actions {:F :forward :+ :left :- :right}
     :delta 90
+    :initial-num-iterations 1
     :max-iterations 4}
    {:name "b"
     :variables #{:F}
@@ -18,6 +19,7 @@
     :rules {:F [:F :F :- :F :- :F :- :F :- :F :F]}
     :actions {:F :forward :+ :left :- :right}
     :delta 90
+    :initial-num-iterations 2
     :max-iterations 5}
    {:name "c"
     :variables #{:F}
@@ -58,6 +60,7 @@
     :rules {:F [:F :+ :F :- :F :- :F :+ :F]}
     :actions {:F :forward :+ :left :- :right}
     :delta 90
+    :initial-num-iterations 1
     :max-iterations 5}])
 
 (defn koch-curves [window-width]

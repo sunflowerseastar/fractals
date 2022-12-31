@@ -9,6 +9,7 @@
 
 (def active-koch-variation (atom 0))
 
+(def default-initial-num-iterations 3)
 (def koch-iterations (atom nil))
 
 ;; canvas
@@ -41,20 +42,32 @@
           :on-click #(when (< num-iterations max-iterations)
                        (swap! koch-iterations update @active-koch-variation inc))}
          "+"]]
-       [:span " | "]
-       (into [:div.switcher]
-             (map-indexed
-              (fn [i type]
-                (let [is-active (= @active-koch-variation i)]
-                  [switcher-a
-                   is-active
-                   #(when-not is-active (reset! active-koch-variation i))
-                   (:name type)]))
-              koch-variations))]]
+       (when (> (count koch-variations) 1) [:span " | "])
+       (when (> (count koch-variations) 1)
+         (into [:div.switcher]
+               (map-indexed
+                (fn [i type]
+                  (let [is-active (= @active-koch-variation i)]
+                    [switcher-a
+                     is-active
+                     #(when-not is-active (reset! active-koch-variation i))
+                     (:name type)]))
+                koch-variations)))]]
      [:div.meta [:span "lines drawn: " @num-lines]]
      [render-canvas! (partial draw! koch-variations) window-width active-koch-variation]]))
 
 (defn l-system [window-width koch-variations]
-  (when (nil? @koch-iterations)
-    (reset! koch-iterations (vec (repeat (count koch-variations) 3))))
-  (l-system-with-iterations-atom window-width koch-variations))
+  (reagent/create-class
+   {:component-will-unmount
+    (fn [] (reset! koch-iterations nil)
+      (reset! active-koch-variation 0))
+
+    :reagent-render
+    (fn []
+      (when (nil? @koch-iterations)
+        (let [initial-koch-iterations (map #(if (:initial-num-iterations %)
+                                              (:initial-num-iterations %)
+                                              default-initial-num-iterations)
+                                           koch-variations)]
+          (reset! koch-iterations (vec initial-koch-iterations))))
+      (l-system-with-iterations-atom window-width koch-variations))}))

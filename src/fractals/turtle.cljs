@@ -83,7 +83,7 @@
         draw-points (turtle-return-draw-points heading delta grammar sentence)
         centered-draw-points (center-draw-points canvas-width canvas-height draw-points)]
 
-    (println draw-points)
+    ;; (println draw-points)
 
     (.setAttribute canvas "height" canvas-height)
     (.setAttribute canvas "width" canvas-width)
