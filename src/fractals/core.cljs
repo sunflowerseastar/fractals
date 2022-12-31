@@ -6,6 +6,7 @@
    [fractals.components :refer [hamburger nav-a]]
    [fractals.koch-curves :refer [koch-curves]]
    [fractals.more-koch-curves :refer [more-koch-curves]]
+   [fractals.fass-curves :refer [fass-curves]]
    [fractals.dragon-curve :refer [dragon-curve]]
    [fractals.sierpinski-curve :refer [sierpinski-curve]]
    [fractals.snowflake :refer [snowflake]]
@@ -14,7 +15,8 @@
    [fractals.triangle :refer [sierpinski-triangle]]))
 
 (def fractals-options
-  [
+  [{:name "fass curves"
+    :component fass-curves}
    {:name "koch curves"
     :component koch-curves}
    {:name "more koch curves"
