@@ -66,7 +66,7 @@
     (reset! x starting-x)
     (reset! y starting-y)
     (reset! step-size (/ canvas-inner-square-size
-                    (reduce * (repeat @(get koch-iterations @active-koch-variation) (:step-division grammar)))))
+                         (reduce * (repeat @(get koch-iterations @active-koch-variation) (:step-division grammar)))))
 
     ;; draw
     (.lineTo context starting-x starting-y)
@@ -80,6 +80,14 @@
     [:<>
      [:div.controls
       [:div
+       [:div.inc-dec
+        [:span "iterations:"]
+        [:a.box-button {:class (when (< @num-iterations 1) "inactive")
+                        :on-click #(when (pos? @num-iterations) (swap! num-iterations dec))} "-"]
+        [:span @num-iterations]
+        [:a.box-button {:class (when (>= @num-iterations max-iterations) "inactive")
+                        :on-click #(when (< @num-iterations max-iterations) (swap! num-iterations inc))} "+"]]
+       [:span " | "]
        (into [:div.switcher]
              (map-indexed
               (fn [i type]
@@ -88,15 +96,7 @@
                    is-active
                    #(when-not is-active (reset! active-koch-variation i))
                    (:name type)]))
-              koch-variations))
-       [:span " | "]
-       [:div.inc-dec
-        [:span "iterations:"]
-        [:a.box-button {:class (when (< @num-iterations 1) "inactive")
-                        :on-click #(when (pos? @num-iterations) (swap! num-iterations dec))} "-"]
-        [:span @num-iterations]
-        [:a.box-button {:class (when (>= @num-iterations max-iterations) "inactive")
-                        :on-click #(when (< @num-iterations max-iterations) (swap! num-iterations inc))} "+"]]]]
+              koch-variations))]]
      [:div.meta [:span "lines drawn: " @num-lines]]
      ;; the concat is to include all the koch-iterations as redraw-atoms
      [apply render-canvas! (concat [draw! window-width active-koch-variation] koch-iterations)]]))

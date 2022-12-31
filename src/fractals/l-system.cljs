@@ -28,16 +28,6 @@
     [:<>
      [:div.controls
       [:div
-       (into [:div.switcher]
-             (map-indexed
-              (fn [i type]
-                (let [is-active (= @active-koch-variation i)]
-                  [switcher-a
-                   is-active
-                   #(when-not is-active (reset! active-koch-variation i))
-                   (:name type)]))
-              koch-variations))
-       [:span " | "]
        [:div.inc-dec
         [:span "iterations:"]
         [:a.box-button
@@ -50,7 +40,17 @@
          {:class (when (>= num-iterations max-iterations) "inactive")
           :on-click #(when (< num-iterations max-iterations)
                        (swap! koch-iterations update @active-koch-variation inc))}
-         "+"]]]]
+         "+"]]
+       [:span " | "]
+       (into [:div.switcher]
+             (map-indexed
+              (fn [i type]
+                (let [is-active (= @active-koch-variation i)]
+                  [switcher-a
+                   is-active
+                   #(when-not is-active (reset! active-koch-variation i))
+                   (:name type)]))
+              koch-variations))]]
      [:div.meta [:span "lines drawn: " @num-lines]]
      [render-canvas! (partial draw! koch-variations) window-width active-koch-variation]]))
 
