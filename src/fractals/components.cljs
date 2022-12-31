@@ -20,6 +20,7 @@
      {:component-did-update
       (fn []
         (let [canvas (.-firstChild (.-firstChild @dom-node))]
+          ;; (println "! draw")
           (draw-fn canvas)))
 
       :component-did-mount

@@ -37,7 +37,6 @@
 ;; 2 - 'just return draw points' turtle; positioning and plotting is separate
 
 (defn plot-xy [context [x y]]
-  ;; (println "!! plot-xy" x y)
   (.lineTo context x y))
 
 (defn point-forward [x y heading]
@@ -47,49 +46,50 @@
     [new-x new-y]))
 
 (defn turtle-return-draw-points [heading delta grammar sentence]
-  (loop [letters (filter identity sentence)
-         heading heading
-         x 300
-         y 300
-         acc []]
-    ;; (println "l:" letters "heading:" heading "acc:" acc)
-    (if (empty? letters) acc
-        (let [action ((first letters) (:actions grammar))]
-          (cond (= action :forward)
-                (let [[new-x new-y] (point-forward x y heading)]
+  (let [starting-point [300 300]]
+    (loop [letters (filter identity sentence)
+           heading heading
+           x (first starting-point)
+           y (second starting-point)
+           acc [starting-point]]
+      (if (empty? letters) acc
+          (let [action ((first letters) (:actions grammar))]
+            (cond (= action :forward)
+                  (let [[new-x new-y] (point-forward x y heading)]
+                    (recur (rest letters)
+                           heading
+                           new-x
+                           new-y
+                           (conj acc [new-x new-y])))
+                  (= action :left)
                   (recur (rest letters)
-                         heading
-                         new-x
-                         new-y
-                         (conj acc [new-x new-y])))
-                (= action :left)
-                (recur (rest letters)
-                       (mod (+ heading delta) 360)
-                       x y
-                       acc)
-                (= action :right)
-                (recur (rest letters)
-                       (mod (- heading delta) 360)
-                       x y
-                       acc))))))
+                         (mod (+ heading delta) 360)
+                         x y
+                         acc)
+                  (= action :right)
+                  (recur (rest letters)
+                         (mod (- heading delta) 360)
+                         x y
+                         acc)))))))
 
 (defn generate-and-center-draw-points [heading delta grammar sentence canvas-width canvas-height]
   (let [draw-points (turtle-return-draw-points heading delta grammar sentence)]
     (center-draw-points canvas-width canvas-height draw-points)))
 
-(defn generate-center-and-plot-points [canvas heading delta grammar sentence]
+(defn generate-center-and-plot-points [canvas heading delta grammar sentence num-lines]
   (let [context (.getContext canvas "2d")
         canvas-width (-> context .-canvas .-clientWidth)
         canvas-height (-> context .-canvas .-clientHeight)
         draw-points (turtle-return-draw-points heading delta grammar sentence)
         centered-draw-points (center-draw-points canvas-width canvas-height draw-points)]
+
+    (println draw-points)
+
     (.setAttribute canvas "height" canvas-height)
     (.setAttribute canvas "width" canvas-width)
 
+    (reset! num-lines (count draw-points))
+
     (doseq [xy centered-draw-points]
       (plot-xy context xy))
-    ;; draw a line from the end to the beginning to close the figure
-    (.lineTo context
-             (first (first centered-draw-points))
-             (second (first centered-draw-points)))
     (.stroke context)))
