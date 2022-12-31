@@ -1,14 +1,13 @@
 (ns fractals.sierpinski-curve
   (:require
    [reagent.core :as reagent :refer [atom]]
-   [fractals.utility :refer [get-centered-equilateral-triangle-canvas-positioning]]
-   [fractals.components :refer [render-canvas!]]
-   [fractals.l-system :refer [l-system]]))
+   [fractals.utility :refer [get-centered-equilateral-triangle-canvas-positioning get-sentence]]
+   [fractals.components :refer [render-canvas!]]))
 
 (def x (atom 200))
 (def y (atom 200))
 (def angle (atom 0))
-(def step (atom 20))
+(def step-size (atom 20))
 (def num-iterations (atom 5))
 (def num-lines (atom 0))
 
@@ -31,8 +30,8 @@
   (let [is-flipped (even? @num-iterations)
         angle (if is-flipped @angle (mod (+ 120 @angle) 360))
         theta (/ (* Math/PI angle) 180.0)
-        new-x ((if is-flipped + -) @x (* @step (Math/cos theta)))
-        new-y (- @y (* @step (Math/sin theta)))]
+        new-x ((if is-flipped + -) @x (* @step-size (Math/cos theta)))
+        new-y (- @y (* @step-size (Math/sin theta)))]
     (reset! x new-x)
     (reset! y new-y)
     (.lineTo context new-x new-y)
@@ -62,7 +61,7 @@
         (get-centered-equilateral-triangle-canvas-positioning
          (-> context .-canvas .-clientWidth)
          (-> context .-canvas .-clientHeight))
-        sentence (drop 1 (l-system sierpinski-curve-grammar @num-iterations))]
+        sentence (drop 1 (get-sentence sierpinski-curve-grammar @num-iterations))]
 
     ;; setup
     (.setAttribute canvas "width" (-> context .-canvas .-clientWidth))
@@ -71,7 +70,7 @@
     ;; (.clearRect context 0 0 (.-width canvas) (.-height canvas))
     (reset! x starting-x)
     (reset! y starting-y)
-    (reset! step (/ triangle-length (reduce * (repeat @num-iterations 2))))
+    (reset! step-size (/ triangle-length (reduce * (repeat @num-iterations 2))))
 
     ;; draw
     (.lineTo context starting-x starting-y)

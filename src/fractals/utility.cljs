@@ -1,5 +1,24 @@
 (ns fractals.utility)
 
+;; l-system
+
+(defn is-variable? [grammar symbol]
+  (contains? (:variables grammar) symbol))
+
+(defn rewrite-sentence [grammar sentence]
+  (flatten (map #(if (is-variable? grammar %) ((:rules grammar) %) %) sentence)))
+
+(defn get-sentence
+  "Given an l-system grammar and a number of iterations, return the sentence after rewriting the axiom and subsequent sentences n times."
+  [grammar n]
+  (->> (:start grammar)
+       (iterate #(rewrite-sentence grammar %))
+       (take (inc n))
+       last))
+
+
+;; canvas positioning
+
 (def canvas-padding-px 20)
 
 ;; equilateral triangle height
@@ -123,3 +142,45 @@
                                                 inner-square-padding)
                        (- (+ canvas-height-padded canvas-padding-px) inner-square-padding))]
     [starting-x starting-y canvas-inner-square-size]))
+
+(defn center-draw-points [canvas-width canvas-height draw-points]
+  (let [min-x (first (apply min-key first draw-points))
+        max-x (first (apply max-key first draw-points))
+        min-y (second (apply min-key second draw-points))
+        max-y (second (apply max-key second draw-points))
+
+        draw-points-width (- max-x min-x)
+        draw-points-height (- max-y min-y)
+
+        canvas-width-padded (- canvas-width (* 2 canvas-padding-px))
+        canvas-height-padded (- canvas-height (* 2 canvas-padding-px))
+
+        draw-points-width-percentage-of-canvas-width (/ draw-points-width canvas-width-padded)
+        draw-points-height-percentage-of-canvas-height (/ draw-points-height canvas-height-padded)
+
+        short-edge (if (< draw-points-width-percentage-of-canvas-width
+                          draw-points-height-percentage-of-canvas-height)
+                     :height
+                     :width)
+        scale-multiplier (if (= short-edge :width)
+                           (/ canvas-width-padded draw-points-width)
+                           (/ canvas-height-padded draw-points-height))
+
+        draw-points-width-scaled (* draw-points-width scale-multiplier)
+        draw-points-height-scaled (* draw-points-height scale-multiplier)
+        x-centering-offset (if (= short-edge :height)
+                             (/ (- canvas-width-padded draw-points-width-scaled) 2)
+                             canvas-padding-px)
+        y-centering-offset (if (= short-edge :width)
+                             (+ (/ (- canvas-height-padded draw-points-height-scaled) 2)
+                                canvas-padding-px)
+                             canvas-padding-px)]
+    (map (fn [[x y]] [(-> x
+                          (- min-x)
+                          (* scale-multiplier)
+                          (+ x-centering-offset))
+                      (-> y
+                          (- min-y)
+                          (* scale-multiplier)
+                          (+ y-centering-offset))])
+         draw-points)))

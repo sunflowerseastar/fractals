@@ -1,15 +1,14 @@
 (ns fractals.quadratic-island
   (:require
    [reagent.core :as reagent :refer [atom]]
-   [fractals.utility :refer [get-centered-square-canvas-positioning]]
+   [fractals.utility :refer [get-centered-square-canvas-positioning get-sentence]]
    [fractals.components :refer [render-canvas! switcher-a]]
-   [fractals.l-system :refer [l-system]]
    [fractals.turtle :refer [turtle-draw-to-canvas!]]))
 
 (def x (atom 200))
 (def y (atom 200))
 (def angle (atom 90))
-(def step (atom 20))
+(def step-size (atom 20))
 (def num-lines (atom 0))
 
 (def active-koch-variation (atom 0))
@@ -57,7 +56,7 @@
          (:canvas-inner-square-size-fn grammar)
          (:inner-square-padding-fn grammar))
 
-        sentence (l-system grammar @(get koch-iterations @active-koch-variation))]
+        sentence (get-sentence grammar @(get koch-iterations @active-koch-variation))]
 
     ;; setup
     (.setAttribute canvas "width" (-> context .-canvas .-clientWidth))
@@ -66,12 +65,12 @@
     (reset! angle (:starting-angle grammar))
     (reset! x starting-x)
     (reset! y starting-y)
-    (reset! step (/ canvas-inner-square-size
+    (reset! step-size (/ canvas-inner-square-size
                     (reduce * (repeat @(get koch-iterations @active-koch-variation) (:step-division grammar)))))
 
     ;; draw
     (.lineTo context starting-x starting-y)
-    (turtle-draw-to-canvas! context x y step angle (:delta grammar) num-lines grammar sentence)
+    (turtle-draw-to-canvas! context x y step-size angle (:delta grammar) num-lines grammar sentence)
     (.stroke context)))
 
 

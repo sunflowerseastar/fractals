@@ -1,15 +1,14 @@
 (ns fractals.snowflake
   (:require
    [reagent.core :as reagent :refer [atom]]
-   [fractals.utility :refer [get-centered-equilateral-triangle-canvas-positioning get-centered-snowflake-canvas-positioning]]
+   [fractals.utility :refer [get-centered-equilateral-triangle-canvas-positioning get-centered-snowflake-canvas-positioning get-sentence]]
    [fractals.components :refer [render-canvas! switcher-a]]
-   [fractals.l-system :refer [l-system]]
    [fractals.turtle :refer [turtle-draw-to-canvas!]]))
 
 (def x (atom 200))
 (def y (atom 200))
 (def angle (atom 90))
-(def step (atom 20))
+(def step-size (atom 20))
 (def num-lines (atom 0))
 
 (def active-koch-variation (atom 0))
@@ -54,7 +53,7 @@
         ((:positioning-fn grammar)
          (-> context .-canvas .-clientWidth)
          (-> context .-canvas .-clientHeight))
-        sentence (l-system grammar @(get koch-iterations @active-koch-variation))]
+        sentence (get-sentence grammar @(get koch-iterations @active-koch-variation))]
 
     ;; setup
     (.setAttribute canvas "width" (-> context .-canvas .-clientWidth))
@@ -63,11 +62,11 @@
     (reset! angle (:starting-angle grammar))
     (reset! x starting-x)
     (reset! y starting-y)
-    (reset! step (nth (iterate #(/ % 3) triangle-length) @(get koch-iterations @active-koch-variation)))
+    (reset! step-size (nth (iterate #(/ % 3) triangle-length) @(get koch-iterations @active-koch-variation)))
 
     ;; draw
     (.lineTo context starting-x starting-y)
-    (turtle-draw-to-canvas! context x y step angle (:delta grammar) num-lines grammar sentence)
+    (turtle-draw-to-canvas! context x y step-size angle (:delta grammar) num-lines grammar sentence)
     (.stroke context)))
 
 (defn snowflake [window-width]
