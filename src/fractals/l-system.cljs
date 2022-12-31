@@ -56,5 +56,5 @@
 
 (defn l-system [window-width koch-variations]
   (when (nil? @koch-iterations)
-    (reset! koch-iterations (vec (repeat (count koch-variations) 2))))
+    (reset! koch-iterations (vec (repeat (count koch-variations) 3))))
   (l-system-with-iterations-atom window-width koch-variations))

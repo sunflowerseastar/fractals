@@ -50,7 +50,15 @@
     :rules {:F [:F :- :F :+ :F :- :F :- :F]}
     :actions {:F :forward :+ :left :- :right}
     :delta 90
-    :max-iterations 6}])
+    :max-iterations 6}
+   {:name "g"
+    :variables #{:F}
+    :constants #{:+ :-}
+    :start [:- :F]
+    :rules {:F [:F :+ :F :- :F :- :F :+ :F]}
+    :actions {:F :forward :+ :left :- :right}
+    :delta 90
+    :max-iterations 5}])
 
 (defn koch-curves [window-width]
   (l-system window-width koch-variations))
