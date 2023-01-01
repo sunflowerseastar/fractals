@@ -94,3 +94,4 @@ This project was inspired by and started from [[https://www.packtpub.com/product
 - https://piratefsh.github.io/2020/08/08/sierpinski-curve.html
 - https://piratefsh.github.io/2020/08/07/koch-tesselation-uncommon-fractal-implementations.html
 - https://www.r-bloggers.com/2017/06/a-shiny-app-to-draw-curves-based-on-l-system/
+- https://books.google.com/books?id=FsH2DwAAQBAJ&pg=PA67&source=gbs_selected_pages&cad=2#v=onepage&q&f=false
