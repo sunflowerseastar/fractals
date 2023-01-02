@@ -81,7 +81,6 @@
      [:div.controls
       [:div
        [:div.inc-dec
-        [:span "iterations:"]
         [:a.box-button {:class (when (< @num-iterations 1) "inactive")
                         :on-click #(when (pos? @num-iterations) (swap! num-iterations dec))} "-"]
         [:span @num-iterations]

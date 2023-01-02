@@ -3,17 +3,8 @@
    [fractals.l-system :refer [l-system]]))
 
 (def fass-variations
-  [{:name "SquaRecurve"
-    :variables #{:X :Z}
-    :constants #{:+ :-}
-    :start [:X]
-    :rules {:X [:X :X :X :- :Z :Z :- :Z :- :X :+ :Z :+ :X :X :+ :Z :- :X :Z :- :Z :- :X :+ :X :+ :Z :Z :+ :X :X :X :+ :Z :- :X :Z :- :Z :- :X :+ :X :+ :Z :Z :+ :X :X :X :+ :Z :X :Z :- :Z :- :X :+ :Z :X :- :Z :Z :- :X :- :Z :+ :X :+ :X :X :+ :Z :Z :Z :-]
-            :Z [:+ :X :X :X :- :Z :Z :- :Z :- :X :+ :Z :+ :X :X :+ :Z :X :- :Z :+ :X :+ :X :Z :X :- :Z :Z :Z :- :X :X :- :Z :- :Z :+ :X :+ :X :Z :+ :X :- :Z :Z :Z :- :X :X :- :Z :- :Z :+ :X :+ :X :Z :+ :X :- :Z :Z :- :X :- :Z :+ :X :+ :X :X :+ :Z :Z :Z]}
-    :actions {:X :forward :Z :forward :+ :left :- :right}
-    :delta 90
-    :initial-num-iterations 1
-    :max-iterations 3}
-   {:name "quadratic gosper ('E-curve')"
+  [
+   {:name "quad gosper"
     :variables #{:X :Y}
     :constants #{:+ :-}
     :start [:- :Y]
@@ -27,7 +18,7 @@
     :delta 90
     :initial-num-iterations 2
     :max-iterations 3}
-   {:name "hexagonal gosper"
+   {:name "hex gosper"
     :variables #{:X :Y}
     :constants #{:+ :-}
     :start [:X]

@@ -70,6 +70,11 @@
                   (recur (rest letters)
                          (mod (- heading delta) 360)
                          x y
+                         acc)
+                  :else
+                  (recur (rest letters)
+                         heading
+                         x y
                          acc)))))))
 
 (defn generate-and-center-draw-points [heading delta grammar sentence canvas-width canvas-height]
