@@ -3,16 +3,7 @@
    [fractals.l-system :refer [l-system]]))
 
 (def fass-variations
-  [{:name "d"
-    :variables #{:L :R}
-    :constants #{:+ :-}
-    :start [:L]
-    :rules {:L [:R :R :- :L :- :L :+ :R :+ :R :L :+ :R :- :L :R :+ :L :- :R :- :L :+ :R :L :L :- :R :- :L :R :L :R :L :+ :R :- :L :R :L :R :+ :L :+ :R :R :L :R :L :+ :R :- :L :R :L :- :L :- :R :L :+ :R :- :L :R :L :R :L :+ :R :+ :R :L :R :L :R :L :+ :R :- :L :L :- :R :- :L :+ :R :L :L :- :R :- :L :R :+ :R :+ :L :- :L :- :R :+ :R :+ :L :L :- :R :- :L :R :+ :R :+ :L :- :L :- :R :+ :R :+ :L :L :+]
-            :R [:- :R :R :- :L :- :L :+ :R :+ :R :- :L :- :L :R :+ :L :+ :R :R :- :L :- :L :+ :R :+ :R :- :L :- :L :R :+ :L :+ :R :R :L :- :R :+ :L :+ :R :R :+ :L :- :R :L :R :L :R :L :- :L :- :R :L :R :L :R :+ :L :- :R :L :+ :R :+ :R :L :R :+ :L :- :R :L :R :L :L :- :R :- :L :R :L :R :+ :L :- :R :L :R :L :R :+ :L :+ :R :R :L :- :R :+ :L :+ :R :- :L :R :+ :L :- :R :L :- :L :- :R :+ :R :+ :L :L]}
-    :actions {:L :forward :R :forward :+ :left :- :right}
-    :delta 90
-    :initial-num-iterations 1
-    :max-iterations 3}
+  [
    {:name "Peano"
     :variables #{:L :R}
     :constants #{:F :+ :-}
@@ -37,7 +28,7 @@
     :delta 90
     :initial-num-iterations 4
     :max-iterations 8}
-   {:name "a"
+   {:name "3x3"
     :variables #{:L :R}
     :start [:- :L]
     :rules {:L [:L :F :+ :R :F :R :+ :F :L :- :F :- :L :F :L :F :L :- :F :R :F :R :+]
@@ -46,7 +37,7 @@
     :delta 90
     :initial-num-iterations 3
     :max-iterations 5}
-   {:name "b"
+   {:name "4x4"
     :variables #{:L :R}
     :start [:- :L]
     :rules {:L [:L :F :L :F :+ :R :F :R :+ :F :L :F :L :- :F :R :F :- :L :F :L :-
@@ -57,7 +48,7 @@
     :delta 90
     :initial-num-iterations 2
     :max-iterations 4}
-   {:name "c"
+   {:name "7x7"
     :variables #{:X :Z}
     :constants #{:+ :-}
     :start [:X]
@@ -66,6 +57,16 @@
     :actions {:X :forward :Z :forward :+ :left :- :right}
     :delta 90
     :initial-num-iterations 2
+    :max-iterations 3}
+   {:name "9x9"
+    :variables #{:L :R}
+    :constants #{:+ :-}
+    :start [:L]
+    :rules {:L [:R :R :- :L :- :L :+ :R :+ :R :L :+ :R :- :L :R :+ :L :- :R :- :L :+ :R :L :L :- :R :- :L :R :L :R :L :+ :R :- :L :R :L :R :+ :L :+ :R :R :L :R :L :+ :R :- :L :R :L :- :L :- :R :L :+ :R :- :L :R :L :R :L :+ :R :+ :R :L :R :L :R :L :+ :R :- :L :L :- :R :- :L :+ :R :L :L :- :R :- :L :R :+ :R :+ :L :- :L :- :R :+ :R :+ :L :L :- :R :- :L :R :+ :R :+ :L :- :L :- :R :+ :R :+ :L :L :+]
+            :R [:- :R :R :- :L :- :L :+ :R :+ :R :- :L :- :L :R :+ :L :+ :R :R :- :L :- :L :+ :R :+ :R :- :L :- :L :R :+ :L :+ :R :R :L :- :R :+ :L :+ :R :R :+ :L :- :R :L :R :L :R :L :- :L :- :R :L :R :L :R :+ :L :- :R :L :+ :R :+ :R :L :R :+ :L :- :R :L :R :L :L :- :R :- :L :R :L :R :+ :L :- :R :L :R :L :R :+ :L :+ :R :R :L :- :R :+ :L :+ :R :- :L :R :+ :L :- :R :L :- :L :- :R :+ :R :+ :L :L]}
+    :actions {:L :forward :R :forward :+ :left :- :right}
+    :delta 90
+    :initial-num-iterations 1
     :max-iterations 3}])
 
 (defn more-fass-curves [window-width]
