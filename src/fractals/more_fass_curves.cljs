@@ -3,7 +3,17 @@
    [fractals.l-system :refer [l-system]]))
 
 (def fass-variations
-  [{:name "Peano"
+  [{:name "d"
+    :variables #{:L :R}
+    :constants #{:+ :-}
+    :start [:L]
+    :rules {:L [:R :R :- :L :- :L :+ :R :+ :R :L :+ :R :- :L :R :+ :L :- :R :- :L :+ :R :L :L :- :R :- :L :R :L :R :L :+ :R :- :L :R :L :R :+ :L :+ :R :R :L :R :L :+ :R :- :L :R :L :- :L :- :R :L :+ :R :- :L :R :L :R :L :+ :R :+ :R :L :R :L :R :L :+ :R :- :L :L :- :R :- :L :+ :R :L :L :- :R :- :L :R :+ :R :+ :L :- :L :- :R :+ :R :+ :L :L :- :R :- :L :R :+ :R :+ :L :- :L :- :R :+ :R :+ :L :L :+]
+            :R [:- :R :R :- :L :- :L :+ :R :+ :R :- :L :- :L :R :+ :L :+ :R :R :- :L :- :L :+ :R :+ :R :- :L :- :L :R :+ :L :+ :R :R :L :- :R :+ :L :+ :R :R :+ :L :- :R :L :R :L :R :L :- :L :- :R :L :R :L :R :+ :L :- :R :L :+ :R :+ :R :L :R :+ :L :- :R :L :R :L :L :- :R :- :L :R :L :R :+ :L :- :R :L :R :L :R :+ :L :+ :R :R :L :- :R :+ :L :+ :R :- :L :R :+ :L :- :R :L :- :L :- :R :+ :R :+ :L :L]}
+    :actions {:L :forward :R :forward :+ :left :- :right}
+    :delta 90
+    :initial-num-iterations 1
+    :max-iterations 3}
+   {:name "Peano"
     :variables #{:L :R}
     :constants #{:F :+ :-}
     :start [:L]
