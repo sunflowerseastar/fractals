@@ -2,7 +2,7 @@
   (:require
    [reagent.core :as reagent :refer [atom]]
    [fractals.utility :refer [get-sentence]]
-   [fractals.components :refer [render-canvas! switcher-a]]
+   [fractals.components :refer [inc-dec-with-vec-atom render-canvas! switcher]]
    [fractals.turtle :refer [generate-center-and-plot-points]]))
 
 (def num-lines (atom 0))
@@ -29,29 +29,9 @@
     [:<>
      [:div.controls
       [:div
-       [:div.inc-dec
-        [:a.box-button
-         {:class (when (< num-iterations 1) "inactive")
-          :on-click #(when (pos? num-iterations)
-                       (swap! koch-iterations update @active-koch-variation dec))}
-         "-"]
-        [:span num-iterations]
-        [:a.box-button
-         {:class (when (>= num-iterations max-iterations) "inactive")
-          :on-click #(when (< num-iterations max-iterations)
-                       (swap! koch-iterations update @active-koch-variation inc))}
-         "+"]]
-       (when (> (count koch-variations) 1) [:span " | "])
+       [inc-dec-with-vec-atom num-iterations koch-iterations max-iterations active-koch-variation]
        (when (> (count koch-variations) 1)
-         (into [:div.switcher]
-               (map-indexed
-                (fn [i type]
-                  (let [is-active (= @active-koch-variation i)]
-                    [switcher-a
-                     is-active
-                     #(when-not is-active (reset! active-koch-variation i))
-                     (:name type)]))
-                koch-variations)))]]
+         [switcher koch-variations active-koch-variation])]]
      [:div.meta [:span "lines drawn: " @num-lines]]
      [render-canvas! (partial draw! koch-variations) window-width active-koch-variation]]))
 

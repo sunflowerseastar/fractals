@@ -7,7 +7,7 @@
 
   --space-xs: 0.36em;
   --space-sm: 0.6em;
-  --space-md: 1.28em;
+  --space-md: 0.9em;
   /* 40 matches offset in traingle.cljs */
   --space-40: 40px;
 
@@ -50,11 +50,16 @@ a:hover {
 }
 a.box-button {
   border: 1px solid var(--gray-ddd);
-  margin-left: var(--space-sm);
-  margin-right: var(--space-sm);
+  padding: var(--space-sm) var(--space-md);
 }
 a.box-button:hover {
   border: 1px solid var(--gray-aaa);
+}
+a.box-button-left {
+  margin-right: var(--space-sm);
+}
+a.box-button-right {
+  margin-left: var(--space-sm);
 }
 a.inactive {
   cursor: not-allowed;
@@ -98,7 +103,7 @@ div.switcher a.is-active:hover {
 }
 div.inc-dec {
   display: inline-block;
-  /* border: 1px solid magenta; */
+  margin-right: var(--space-sm);
 }
 div.controls {
   position: absolute;
@@ -209,18 +214,13 @@ canvas {
 }
 
 div.nav {
-  /* margin-left: calc(-1 * var(--space-sm)); */
-  /* display: inline-block; */
-  /* border: 1px solid magenta; */
   padding-right: 40px;
   padding-bottom: 40px;
   margin: 0 auto;
   max-width: 300px;
 }
 div.nav a {
-  /* color: var(--gray-aaa); */
   display: block;
-  /* border: 1px solid cyan; */
   padding: var(--space-sm);
   font-size: 1.2em;
 }

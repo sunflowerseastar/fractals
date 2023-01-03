@@ -8,6 +8,50 @@
   [is-active on-click-fn & children]
   [:a {:on-click on-click-fn :class (when is-active "is-active")} children])
 
+(defn switcher
+  [koch-variations active-koch-variation]
+  (into [:div.switcher]
+        (map-indexed
+         (fn [i type]
+           (let [is-active (= @active-koch-variation i)]
+             [switcher-a
+              is-active
+              #(when-not is-active (reset! active-koch-variation i))
+              (:name type)]))
+         koch-variations)))
+
+;; There are two very similar inc-dec components because the first one operates
+;; on a "simple" single-valued atom, while the second one does a swap!..update
+;; on an atom that has a vector of iteration counts. The difference is subtle.
+(defn inc-dec
+  "Given a simple `num-iterations` atom and a max, return a +/- switcher."
+  [num-iterations max-iterations]
+  [:div.inc-dec
+   [:a.box-button.box-button-left
+    {:class (when (< @num-iterations 1) "inactive")
+     :on-click #(when (pos? @num-iterations) (swap! num-iterations dec))} "-"]
+   [:span @num-iterations]
+   [:a.box-button.box-button-right
+    {:class (when (>= @num-iterations max-iterations) "inactive")
+     :on-click #(when (< @num-iterations max-iterations) (swap! num-iterations inc))} "+"]])
+
+(defn inc-dec-with-vec-atom
+  "Given a `num-iterations` atom that contains a vector of iterations, and a max,
+  return a +/- switcher."
+  [num-iterations koch-iterations max-iterations active-koch-variation]
+  [:div.inc-dec
+   [:a.box-button.box-button-left
+    {:class (when (< num-iterations 1) "inactive")
+     :on-click #(when (pos? num-iterations)
+                  (swap! koch-iterations update @active-koch-variation dec))}
+    "-"]
+   [:span num-iterations]
+   [:a.box-button.box-button-right
+    {:class (when (>= num-iterations max-iterations) "inactive")
+     :on-click #(when (< num-iterations max-iterations)
+                  (swap! koch-iterations update @active-koch-variation inc))}
+    "+"]])
+
 (defn nav-a
   "'a' as in 'an <a> tag anchor"
   [is-active on-click-fn & children]

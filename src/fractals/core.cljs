@@ -8,7 +8,6 @@
    [fractals.more-koch-curves :refer [more-koch-curves]]
    [fractals.fass-curves :refer [fass-curves]]
    [fractals.more-fass-curves :refer [more-fass-curves]]
-   [fractals.dragon-curve :refer [dragon-curve]]
    [fractals.sierpinski-curve :refer [sierpinski-curve]]
    [fractals.snowflake :refer [snowflake]]
    [fractals.quadratic-island :refer [quadratic-island]]
@@ -16,20 +15,18 @@
    [fractals.triangle :refer [sierpinski-triangle]]))
 
 (def fractals-options
-  [{:name "more fass curves"
-    :component more-fass-curves}
-   {:name "fass curves"
+  [{:name "fass curves"
     :component fass-curves}
+   {:name "more fass curves"
+    :component more-fass-curves}
    {:name "koch curves"
     :component koch-curves}
    {:name "more koch curves"
     :component more-koch-curves}
-   {:name "koch snowflake"
-    :component snowflake}
    {:name "quadratic koch island"
     :component quadratic-island}
-   {:name "dragon curve"
-    :component dragon-curve}
+   {:name "koch snowflake"
+    :component snowflake}
    {:name "sierpiński curve"
     :component sierpinski-curve}
    {:name "sierpiński carpet"

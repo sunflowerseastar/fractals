@@ -2,7 +2,7 @@
   (:require
    [reagent.core :as reagent :refer [atom]]
    [fractals.utility :refer [get-centered-equilateral-triangle-canvas-positioning get-sentence]]
-   [fractals.components :refer [render-canvas!]]))
+   [fractals.components :refer [inc-dec render-canvas!]]))
 
 (def x (atom 200))
 (def y (atom 200))
@@ -80,12 +80,6 @@
 
 (defn sierpinski-curve [window-width]
   [:<>
-   [:div.controls
-    [:div.inc-dec
-     [:a.box-button {:class (when (< @num-iterations 1) "inactive")
-                     :on-click #(when (pos? @num-iterations) (swap! num-iterations dec))} "-"]
-     [:span @num-iterations]
-     [:a.box-button {:class (when (>= @num-iterations 9) "inactive")
-                     :on-click #(when (< @num-iterations 9) (swap! num-iterations inc))} "+"]]]
+   [:div.controls [inc-dec num-iterations 9]]
    [:div.meta [:span "lines drawn: " @num-lines]]
    [render-canvas! draw! window-width num-iterations]])

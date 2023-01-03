@@ -2,7 +2,7 @@
   (:require
    [reagent.core :as reagent :refer [atom]]
    [fractals.utility :refer [get-centered-square-canvas-positioning get-sentence]]
-   [fractals.components :refer [render-canvas! switcher-a]]
+   [fractals.components :refer [inc-dec render-canvas! switcher]]
    [fractals.turtle :refer [turtle-draw-to-canvas!]]))
 
 (def x (atom 200))
@@ -80,22 +80,8 @@
     [:<>
      [:div.controls
       [:div
-       [:div.inc-dec
-        [:a.box-button {:class (when (< @num-iterations 1) "inactive")
-                        :on-click #(when (pos? @num-iterations) (swap! num-iterations dec))} "-"]
-        [:span @num-iterations]
-        [:a.box-button {:class (when (>= @num-iterations max-iterations) "inactive")
-                        :on-click #(when (< @num-iterations max-iterations) (swap! num-iterations inc))} "+"]]
-       [:span " | "]
-       (into [:div.switcher]
-             (map-indexed
-              (fn [i type]
-                (let [is-active (= @active-koch-variation i)]
-                  [switcher-a
-                   is-active
-                   #(when-not is-active (reset! active-koch-variation i))
-                   (:name type)]))
-              koch-variations))]]
+       [inc-dec num-iterations max-iterations]
+       [switcher koch-variations active-koch-variation]]]
      [:div.meta [:span "lines drawn: " @num-lines]]
      ;; the concat is to include all the koch-iterations as redraw-atoms
      [apply render-canvas! (concat [draw! window-width active-koch-variation] koch-iterations)]]))

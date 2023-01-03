@@ -1,7 +1,7 @@
 (ns fractals.triangle
   (:require
    [reagent.core :as reagent :refer [atom]]
-   [fractals.components :refer [render-canvas! switcher-a]]))
+   [fractals.components :refer [render-canvas! switcher]]))
 
 ;; utility
 (def scale 1)
@@ -120,15 +120,6 @@
 
 (defn sierpinski-triangle [window-width]
   [:<>
-   [:div.controls
-    (into [:div.switcher]
-          (map-indexed
-           (fn [i type]
-             (let [is-active (= @active-triangle-plot-type i)]
-               [switcher-a
-                is-active
-                #(when-not is-active (reset! active-triangle-plot-type i))
-                (:name type)]))
-           triangle-plot-types))]
+   [:div.controls [switcher triangle-plot-types active-triangle-plot-type]]
    [:div.meta [:span "rows: " @num-rows " | squares drawn: " @num-squares]]
    [render-canvas! draw! window-width active-triangle-plot-type]])

@@ -3,7 +3,16 @@
    [fractals.l-system :refer [l-system]]))
 
 (def fass-variations
-  [
+  [{:name "Hilbert"
+    :variables #{:L :R}
+    :constants #{:F :+ :-}
+    :start [:L]
+    :rules {:L [:+ :R :F :- :L :F :L :- :F :R :+]
+            :R [:- :L :F :+ :R :F :R :+ :F :L :-]}
+    :actions {:F :forward :+ :left :- :right}
+    :delta 90
+    :initial-num-iterations 4
+    :max-iterations 8}
    {:name "Peano"
     :variables #{:L :R}
     :constants #{:F :+ :-}
@@ -18,16 +27,6 @@
     :delta 45
     :initial-num-iterations 2
     :max-iterations 3}
-   {:name "Hilbert"
-    :variables #{:L :R}
-    :constants #{:F :+ :-}
-    :start [:L]
-    :rules {:L [:+ :R :F :- :L :F :L :- :F :R :+]
-            :R [:- :L :F :+ :R :F :R :+ :F :L :-]}
-    :actions {:F :forward :+ :left :- :right}
-    :delta 90
-    :initial-num-iterations 4
-    :max-iterations 8}
    {:name "3x3"
     :variables #{:L :R}
     :start [:- :L]
