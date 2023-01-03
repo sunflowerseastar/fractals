@@ -3,7 +3,7 @@
    [goog.dom :as gdom]
    [reagent.core :as reagent :refer [atom]]
    [reagent.dom :as rdom]
-   [fractals.components :refer [hamburger nav-a]]
+   [fractals.components :refer [hamburger nav-a sfss-logo]]
    [fractals.koch-curves :refer [koch-curves]]
    [fractals.more-koch-curves :refer [more-koch-curves]]
    [fractals.fass-curves :refer [fass-curves]]
@@ -45,6 +45,7 @@
        (:component (get fractals-options @current-fractals-option))]
     [:<>
      [:div.header
+      [:div.logo-container-mobile [sfss-logo]]
       [:span (:name (get fractals-options @current-fractals-option))]]
      [current-fractals-component window-width]
      [:div.footer]
@@ -60,7 +61,8 @@
                      (swap! is-nav-active not))
                   (:name option)]))
              fractals-options))]
-     [hamburger #(swap! is-nav-active not) @is-nav-active]]))
+     [hamburger #(swap! is-nav-active not) @is-nav-active]
+     [:div.logo-container-desktop [sfss-logo]]]))
 
 (defn on-window-resize [evt]
   (reset! window-width (.-innerWidth js/window)))

@@ -1,6 +1,6 @@
-(defproject fractals "0.3.0"
-  :description "canvas drawings of Sierpinski triangle"
-  :url "https://github.com/sunflowerseastar/sierpinski"
+(defproject fractals "0.4.0"
+  :description "canvas fractal drawings"
+  :url "https://github.com/sunflowerseastar/fractals"
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
 

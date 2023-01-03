@@ -94,3 +94,13 @@
    {:on-click on-click
     :class (when is-nav-active "is-nav-active")}
    [icon-qki]])
+
+(def logo-matrix [[0 1 1 0 1 1 1 0 1 1 0 1 1]
+                  [0 1 0 0 1 1 0 0 1 0 0 1 0]
+                  [1 1 0 0 1 0 0 1 1 0 1 1 0]])
+
+(defn sfss-logo []
+  (into [:div.logo]
+        (map
+         (fn [x] [:div {:class (when (pos? x) "logo-block")}])
+         (flatten logo-matrix))))
