@@ -10,12 +10,15 @@
    [fractals.more-fass-curves :refer [more-fass-curves]]
    [fractals.sierpinski-curve :refer [sierpinski-curve]]
    [fractals.snowflake :refer [snowflake]]
+   [fractals.hilbert-3d :refer [hilbert-3d]]
    [fractals.quadratic-island :refer [quadratic-island]]
    [fractals.carpet :refer [sierpinski-carpet]]
    [fractals.triangle :refer [sierpinski-triangle]]))
 
 (def fractals-options
-  [{:name "fass curves"
+  [{:name "hilbert 3d"
+    :component hilbert-3d}
+   {:name "fass curves"
     :component fass-curves}
    {:name "more fass curves"
     :component more-fass-curves}

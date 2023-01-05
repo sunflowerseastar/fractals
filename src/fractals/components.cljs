@@ -25,15 +25,17 @@
 ;; on an atom that has a vector of iteration counts. The difference is subtle.
 (defn inc-dec
   "Given a simple `num-iterations` atom and a max, return a +/- switcher."
-  [num-iterations max-iterations]
-  [:div.inc-dec
-   [:a.box-button.box-button-left
-    {:class (when (< @num-iterations 1) "inactive")
-     :on-click #(when (pos? @num-iterations) (swap! num-iterations dec))} "-"]
-   [:span @num-iterations]
-   [:a.box-button.box-button-right
-    {:class (when (>= @num-iterations max-iterations) "inactive")
-     :on-click #(when (< @num-iterations max-iterations) (swap! num-iterations inc))} "+"]])
+  ([num-iterations max-iterations]
+   (inc-dec num-iterations max-iterations 0))
+  ([num-iterations max-iterations min-iterations]
+   [:div.inc-dec
+    [:a.box-button.box-button-left
+     {:class (when (<= @num-iterations min-iterations) "inactive")
+      :on-click #(when (> @num-iterations min-iterations) (swap! num-iterations dec))} "-"]
+    [:span @num-iterations]
+    [:a.box-button.box-button-right
+     {:class (when (>= @num-iterations max-iterations) "inactive")
+      :on-click #(when (< @num-iterations max-iterations) (swap! num-iterations inc))} "+"]]))
 
 (defn inc-dec-with-vec-atom
   "Given a `num-iterations` atom that contains a vector of iterations, and a max,
