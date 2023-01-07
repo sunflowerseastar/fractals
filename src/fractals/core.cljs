@@ -13,11 +13,14 @@
    [fractals.hilbert-3d :refer [hilbert-3d]]
    [fractals.quadratic-island :refer [quadratic-island]]
    [fractals.carpet :refer [sierpinski-carpet]]
+   [fractals.barnsley :refer [barnsley]]
    [fractals.triangle :refer [sierpinski-triangle]]))
 
 (def fractals-options
   [{:name "hilbert 3d"
     :component hilbert-3d}
+   {:name "barnsley fern"
+    :component barnsley}
    {:name "fass curves"
     :component fass-curves}
    {:name "more fass curves"
