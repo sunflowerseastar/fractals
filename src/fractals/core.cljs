@@ -14,11 +14,15 @@
    [fractals.quadratic-island :refer [quadratic-island]]
    [fractals.carpet :refer [sierpinski-carpet]]
    [fractals.barnsley :refer [barnsley]]
+   [fractals.mandelbrot :refer [mandelbrot]]
    [fractals.triangle :refer [sierpinski-triangle]]))
 
-(def fractals-options
+(def pages
   [{:name "hilbert 3d"
     :component hilbert-3d}
+   {:name "mandelbrot set"
+    :component mandelbrot
+    :is-logo-dimmed true}
    {:name "barnsley fern"
     :component barnsley}
    {:name "fass curves"
@@ -39,7 +43,7 @@
     :component sierpinski-carpet}
    {:name "sierpiński triangle"
     :component sierpinski-triangle}])
-(def current-fractals-option (atom 0))
+(def current-page-index (atom 0))
 
 (def window-width (atom nil))
 
@@ -47,28 +51,28 @@
 
 (defn main []
   (let
-      [current-fractals-component
-       (:component (get fractals-options @current-fractals-option))]
+      [current-page (get pages @current-page-index)
+       current-fractals-component (:component current-page)]
     [:<>
      [:div.header
-      [:div.logo-container-mobile [sfss-logo]]
-      [:span (:name (get fractals-options @current-fractals-option))]]
+      [:div.logo-container-mobile [sfss-logo (:is-logo-dimmed current-page)]]
+      [:span (:name current-page)]]
      [current-fractals-component window-width]
      [:div.footer]
      [:div.nav-container {:class (when @is-nav-active "is-nav-active")}
       (into [:div.nav]
             (map-indexed
              (fn [i option]
-               (let [is-active (= @current-fractals-option i)]
+               (let [is-active (= @current-page-index i)]
                  [nav-a
                   is-active
                   #(when-not is-active
-                     (reset! current-fractals-option i)
+                     (reset! current-page-index i)
                      (swap! is-nav-active not))
                   (:name option)]))
-             fractals-options))]
+             pages))]
      [hamburger #(swap! is-nav-active not) @is-nav-active]
-     [:div.logo-container-desktop [sfss-logo]]]))
+     [:div.logo-container-desktop [sfss-logo (:is-logo-dimmed current-page)]]]))
 
 (defn on-window-resize [evt]
   (reset! window-width (.-innerWidth js/window)))

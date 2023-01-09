@@ -10,6 +10,7 @@
                  [org.clojure/clojurescript "1.11.4"]
                  [cljsjs/react "17.0.2-0"]
                  [cljsjs/react-dom "17.0.2-0"]
+                 [thi.ng/color "1.5.0"]
                  [reagent "1.1.1"]]
 
   :source-paths ["src"]

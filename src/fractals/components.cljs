@@ -9,16 +9,16 @@
   [:a {:on-click on-click-fn :class (when is-active "is-active")} children])
 
 (defn switcher
-  [koch-variations active-koch-variation]
+  [variations active-variation]
   (into [:div.switcher]
         (map-indexed
          (fn [i type]
-           (let [is-active (= @active-koch-variation i)]
+           (let [is-active (= @active-variation i)]
              [switcher-a
               is-active
-              #(when-not is-active (reset! active-koch-variation i))
+              #(when-not is-active (reset! active-variation i))
               (:name type)]))
-         koch-variations)))
+         variations)))
 
 ;; There are two very similar inc-dec components because the first one operates
 ;; on a "simple" single-valued atom, while the second one does a swap!..update
@@ -101,8 +101,10 @@
                   [0 1 0 0 1 1 0 0 1 0 0 1 0]
                   [1 1 0 0 1 0 0 1 1 0 1 1 0]])
 
-(defn sfss-logo []
-  (into [:div.logo]
-        (map
-         (fn [x] [:div {:class (when (pos? x) "logo-block")}])
-         (flatten logo-matrix))))
+(defn sfss-logo
+  ([] (sfss-logo false))
+  ([is-logo-dimmed]
+   (into [:div.logo {:class (when is-logo-dimmed "dimmed")}]
+         (map
+          (fn [x] [:div {:class (when (pos? x) "logo-block")}])
+          (flatten logo-matrix)))))

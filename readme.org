@@ -97,3 +97,4 @@ This project was inspired by and started from [[https://www.packtpub.com/product
 - https://books.google.com/books?id=FsH2DwAAQBAJ&pg=PA67&source=gbs_selected_pages&cad=2#v=onepage&q&f=false
 - http://algorithmicbotany.org/papers/
   - http://algorithmicbotany.org/papers/abop/abop_errata.html
+- https://web.dev/canvas-performance/

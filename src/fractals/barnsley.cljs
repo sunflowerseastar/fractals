@@ -57,7 +57,8 @@
       (.moveTo context (first xy) (second xy))
       (.beginPath context)
       (.arc context (first xy) (second xy) 1 0 (* 2 js/Math.PI))
-      (.fill context))))
+      (.fill context))
+    ))
 
 (defn barnsley [window-width]
   [:<>

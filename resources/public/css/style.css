@@ -279,6 +279,9 @@ div.nav a.is-active:hover {
   width: 60px;
   opacity: 0.7;
 }
+.logo.dimmed {
+  opacity: 0.3;
+}
 @media (min-width: 768px) {
   .logo {
     width: 70px;
@@ -307,4 +310,18 @@ div.nav a.is-active:hover {
   margin-right: auto;
   border: 0;
   overflow: hidden;
+}
+
+@media (min-width: 768px) {
+  .mobile-only {
+    display: none;
+  }
+}
+.desktop-only {
+  display: none;
+}
+@media (min-width: 768px) {
+  .desktop-only {
+    display: block;
+  }
 }
